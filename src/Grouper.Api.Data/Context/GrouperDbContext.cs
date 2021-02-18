@@ -9,25 +9,20 @@ using System.Threading.Tasks;
 
 namespace Grouper.Api.Data.Context
 {
-    public class GrouperContext: IdentityDbContext<ApplicationUser>
+    public class GrouperDbContext: IdentityDbContext<ApplicationUser>
     {
-        public GrouperContext(DbContextOptions<GrouperContext> options) : base(options)
+        public GrouperDbContext(DbContextOptions<GrouperDbContext> options) : base(options)
         { }
 
         public DbSet<Comment> Comments{ get; set; }
         public DbSet<Form> Forms { get; set; }
         public DbSet<Group> Groups { get; set; }
         public DbSet<Post> Posts { get; set; }
-        public DbSet<UserForm> UsersForms { get; set; }
         public DbSet<UserGroup> UsersGroups { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
-
-            builder.Entity<UserForm>()
-                .ToTable("UserForm")
-                .HasKey(o => new { o.UserId, o.FormId});
 
             builder.Entity<UserGroup>()
                 .ToTable("UserGroup")

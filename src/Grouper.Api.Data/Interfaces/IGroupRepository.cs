@@ -1,0 +1,19 @@
+﻿using Grouper.Api.Data.Entities;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Grouper.Api.Data.Interfaces
+{
+    public interface IGroupRepository
+    {
+        Task<Group> GetById(int groupId);
+        Task Update(Group group);
+        Task AddUserToGroup(int groupId, string userId);
+        Task Create(Group group);
+        Task Delete(int id);
+        Task<List<Group>> GetByUserId(string userId);
+    }
+}

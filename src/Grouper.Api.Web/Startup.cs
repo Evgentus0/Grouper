@@ -43,7 +43,7 @@ namespace Grouper.Api.Web
 
         protected virtual void configureDb(IServiceCollection services)
         {
-            services.AddDbContext<GrouperContext>(options =>
+            services.AddDbContext<GrouperDbContext>(options =>
             {
                 options.UseLoggerFactory(LoggerFactory)
                 .EnableSensitiveDataLogging()
@@ -51,7 +51,7 @@ namespace Grouper.Api.Web
             });
 
             services.AddIdentity<ApplicationUser, IdentityRole>()
-                .AddEntityFrameworkStores<GrouperContext>();
+                .AddEntityFrameworkStores<GrouperDbContext>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -64,7 +64,7 @@ namespace Grouper.Api.Web
 
             using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
             {
-                var context = serviceScope.ServiceProvider.GetRequiredService<GrouperContext>();
+                var context = serviceScope.ServiceProvider.GetRequiredService<GrouperDbContext>();
                 DbInitializer.Initialize(context);
             }
 

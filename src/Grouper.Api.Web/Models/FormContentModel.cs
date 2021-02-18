@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 
 namespace Grouper.Api.Web.Models
 {
-    public class QuestionModel
+    public class FormContentModel
     {
-        public string Question { get; set; }
-        public string Answer { get; set; }
+        public string Header {get;set;}
+        public string Content { get; set; }
     }
 }

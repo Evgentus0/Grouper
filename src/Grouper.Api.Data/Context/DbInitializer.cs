@@ -8,7 +8,7 @@ namespace Grouper.Api.Data.Context
 {
     public class DbInitializer
     {
-        public static void Initialize(GrouperContext context)
+        public static void Initialize(GrouperDbContext context)
         {
             var notExist = context.Database.EnsureCreated();
             var alreadyExis = !notExist;
