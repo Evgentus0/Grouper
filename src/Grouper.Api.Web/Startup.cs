@@ -1,5 +1,6 @@
 using Grouper.Api.Data.Context;
 using Grouper.Api.Data.Entities;
+using Grouper.Api.Infrastructure.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -38,20 +39,7 @@ namespace Grouper.Api.Web
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Grouper.Api.Web", Version = "v1" });
             });
 
-            configureDb(services);
-        }
-
-        protected virtual void configureDb(IServiceCollection services)
-        {
-            services.AddDbContext<GrouperDbContext>(options =>
-            {
-                options.UseLoggerFactory(LoggerFactory)
-                .EnableSensitiveDataLogging()
-                .UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
-            });
-
-            services.AddIdentity<ApplicationUser, IdentityRole>()
-                .AddEntityFrameworkStores<GrouperDbContext>();
+            services.AddData(Configuration, LoggerFactory);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -62,11 +50,7 @@ namespace Grouper.Api.Web
                 app.UseDeveloperExceptionPage();
             }
 
-            using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
-            {
-                var context = serviceScope.ServiceProvider.GetRequiredService<GrouperDbContext>();
-                DbInitializer.Initialize(context);
-            }
+            app.InitDbIfNotExist();
 
             app.UseSwagger();
             app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Grouper.Api.Web v1"));

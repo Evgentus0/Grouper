@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Grouper.Api.Data.Interfaces
 {
-    public interface IUnitOfWork
+    public interface IUnitOfWork: IDisposable
     {
         IFormRepository FormRepository { get; }
         IGroupRepository GroupRepository { get; }
