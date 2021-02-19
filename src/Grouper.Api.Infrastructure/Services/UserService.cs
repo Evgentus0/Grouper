@@ -19,15 +19,17 @@ namespace Grouper.Api.Infrastructure.Services
         private readonly IUnitOfWork _dataBase;
         private readonly IMapper _mapper;
         private readonly IJwtTokenGenerator _tokenGenerator;
+        private readonly JwtSecurityTokenHandler _tokenHandler;
 
-        public UserService(IUnitOfWork dataBase, IMapper mapper, IJwtTokenGenerator tokenGenerator)
+        public UserService(IUnitOfWork dataBase, IMapper mapper, IJwtTokenGenerator tokenGenerator, JwtSecurityTokenHandler tokenHandler)
         {
             _dataBase = dataBase;
             _mapper = mapper;
             _tokenGenerator = tokenGenerator;
+            _tokenHandler = tokenHandler;
         }
 
-        public async Task<JwtSecurityToken> SignIn(UserDto userDto)
+        public async Task<string> SignIn(UserDto userDto)
         {
             var appUser = await _dataBase.UserManager.FindByEmailAsync(userDto.Email);
 
@@ -37,9 +39,11 @@ namespace Grouper.Api.Infrastructure.Services
                 if (isAuthenticate)
                 {
                     var verifiedUser = _mapper.Map<UserDto>(appUser);
+                    verifiedUser.Role = (await _dataBase.UserManager.GetRolesAsync(appUser)).FirstOrDefault();
+
                     var token = await _tokenGenerator.GenerateToken(verifiedUser);
 
-                    return token;
+                    return _tokenHandler.WriteToken(token);
                 }
                 else
                 {

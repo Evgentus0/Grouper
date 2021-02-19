@@ -30,12 +30,12 @@ namespace Grouper.Api.Web.Controllers
 
         [HttpPost]
         [Route("sign-in")]
-        public async Task<ActionResult<JwtSecurityToken>> SignIn([FromBody] UserModel user)
+        public async Task<ActionResult<string>> SignIn([FromBody] UserModel user)
         {
             var userDto = _mapper.Map<UserDto>(user);
-            JwtSecurityToken token = await _userService.SignIn(userDto);
+            string token = await _userService.SignIn(userDto);
 
-            return Ok(token);
+            return Ok(new { token = token});
         }
 
         [HttpPost]

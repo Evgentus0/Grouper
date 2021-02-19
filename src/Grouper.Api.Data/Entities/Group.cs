@@ -11,7 +11,7 @@ namespace Grouper.Api.Data.Entities
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public int ParentGroupId { get; set; }
+        public int? ParentGroupId { get; set; }
         [ForeignKey("ParentGroupId")]
         public Group ParentGroup { get; set; }
         public List<Post> Tasks { get; set; }

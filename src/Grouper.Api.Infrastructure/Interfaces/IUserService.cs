@@ -10,7 +10,7 @@ namespace Grouper.Api.Infrastructure.Interfaces
 {
     public interface IUserService
     {
-        Task<JwtSecurityToken> SignIn(UserDto userDto);
+        Task<string> SignIn(UserDto userDto);
         Task SignUp(UserDto userDto);
     }
 }

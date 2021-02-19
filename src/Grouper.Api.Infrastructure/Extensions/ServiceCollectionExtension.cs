@@ -29,7 +29,19 @@ namespace Grouper.Api.Infrastructure.Extensions
                 .UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
             });
 
-            services.AddIdentity<ApplicationUser, IdentityRole>()
+            services.AddIdentity<ApplicationUser, IdentityRole>(options => 
+            {
+                options.User.RequireUniqueEmail = true;
+
+                options.Password = new PasswordOptions
+                {
+                    RequireDigit = false,
+                    RequiredUniqueChars = 0,
+                    RequireLowercase = false,
+                    RequireNonAlphanumeric = false,
+                    RequireUppercase = false
+                };
+            })
                 .AddEntityFrameworkStores<GrouperDbContext>();
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();

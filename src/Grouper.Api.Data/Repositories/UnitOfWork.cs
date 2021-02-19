@@ -16,18 +16,21 @@ namespace Grouper.Api.Data.Repositories
 
         private readonly GrouperDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IFormRepository _formRepository;
         private readonly IGroupRepository _groupRepository;
         private readonly IPostRepository _postRepository;
 
         public UnitOfWork(GrouperDbContext context, 
             UserManager<ApplicationUser> userManager,
+            RoleManager<IdentityRole> roleManager,
             IFormRepository formRepository,
             IGroupRepository groupRepository,
             IPostRepository postRepository)
         {
             _context = context;
             _userManager = userManager;
+            _roleManager = roleManager;
             _formRepository = formRepository;
             _groupRepository = groupRepository;
             _postRepository = postRepository;
@@ -40,6 +43,7 @@ namespace Grouper.Api.Data.Repositories
         public IPostRepository PostRepository => _postRepository;
 
         public UserManager<ApplicationUser> UserManager => _userManager;
+        public RoleManager<IdentityRole> RoleManager => _roleManager;
 
         public void Save()
         {

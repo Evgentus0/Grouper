@@ -36,8 +36,6 @@ namespace Grouper.Api.Infrastructure.Core
                 };
 
                 var token = new JwtSecurityToken(
-                issuer: _settings.Authorization.Issuer,
-                audience: _settings.Authorization.Audience,
                 claims: claims,
                 expires: DateTime.Now.AddMinutes(_settings.Authorization.MinutesToExpiration),
                 signingCredentials: credentials

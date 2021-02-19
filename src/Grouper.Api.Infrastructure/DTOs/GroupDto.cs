@@ -11,8 +11,7 @@ namespace Grouper.Api.Infrastructure.DTOs
         public int Id { get; set; }
         public string Name { get; set; }
         public GroupDto ParentGroup { get; set; }
-        public List<UserDto> Pupils { get; set; }
-        public List<UserDto> Teachers { get; set; }
+        public List<UserDto> Participants { get; set; }
         public List<PostDto> Tasks { get; set; }
         public List<string> UsefulLinks { get; set; }
     }

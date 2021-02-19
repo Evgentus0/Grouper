@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
+using Grouper.Api.Infrastructure.Core;
 using Grouper.Api.Infrastructure.DTOs;
 using Grouper.Api.Infrastructure.Interfaces;
 using Grouper.Api.Web.Models;
 using Grouper.Api.Web.Models.Outbound;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -14,6 +16,7 @@ namespace Grouper.Api.Web.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(AuthenticationSchemes = "Bearer", Roles = "teacher")]
     public class GroupController : ControllerBase
     {
         private readonly IGroupService _groupService;
@@ -24,7 +27,9 @@ namespace Grouper.Api.Web.Controllers
             _groupService = groupService;
             _mapper = mapper;
         }
+
         [HttpGet]
+        [Authorize(Roles = "student")]
         public async Task<ActionResult<List<GroupModel>>> Get([FromQuery] string userId)
         {
             List<GroupDto> groupDtos = await _groupService.GetByUserId(userId);
@@ -35,6 +40,7 @@ namespace Grouper.Api.Web.Controllers
 
         [HttpGet]
         [Route("{id}")]
+        [Authorize(Roles = "student")]
         public async Task<ActionResult<GroupModel>> GetById(int id)
         {
             GroupDto groupDto = await _groupService.GetById(id);
