@@ -30,7 +30,7 @@ namespace Grouper.Api.Web.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "student")]
+        [Authorize(Roles = "student,teacher")]
         public async Task<ActionResult<List<GroupModel>>> Get([FromQuery] string userId)
         {
             List<GroupDto> groupDtos = await _groupService.GetByUserId(userId);
@@ -41,7 +41,7 @@ namespace Grouper.Api.Web.Controllers
 
         [HttpGet]
         [Route("{id}")]
-        [Authorize(Roles = "student")]
+        [Authorize(Roles = "student,teacher")]
         public async Task<ActionResult<GroupModel>> GetById(int id)
         {
             GroupDto groupDto = await _groupService.GetById(id);
