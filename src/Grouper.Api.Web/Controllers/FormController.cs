@@ -1,4 +1,7 @@
-﻿using Grouper.Api.Web.Models;
+﻿using AutoMapper;
+using Grouper.Api.Infrastructure.DTOs;
+using Grouper.Api.Infrastructure.Interfaces;
+using Grouper.Api.Web.Models;
 using Grouper.Api.Web.Models.Outbound;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -13,41 +16,63 @@ namespace Grouper.Api.Web.Controllers
     [ApiController]
     public class FormController : ControllerBase
     {
+        private readonly IFormService _formService;
+        private readonly IMapper _mapper;
+
+        public FormController(IFormService formService, IMapper mapper)
+        {
+            _formService = formService;
+            _mapper = mapper;
+        }
+
         [HttpGet]
         [Route("{id}")]
         public async Task<ActionResult<FormModel>> GetById(int id)
         {
-            var f = new FormModel();
+            FormDto form = await _formService.GetById(id);
+            var result = _mapper.Map<FormModel>(form);
 
-            return Ok(f);
+            return Ok(result);
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<FormModel>>> GetByUserId([FromQuery] int userId)
+        public async Task<ActionResult<List<FormModel>>> GetByUserId([FromQuery] string userId)
         {
-            var lf = new List<FormModel>();
+            List<FormDto> forms = await _formService.GetByUserId(userId);
+            var result = _mapper.Map<List<FormDto>>(forms);
 
-            return Ok(lf);
+            return Ok(result);
         }
 
         [HttpPost]
-        public async Task<ActionResult<ResponseModel>> Create()
+        public async Task<ActionResult<ResponseModel>> Create([FromBody]FormModel formModel)
         {
-            return Ok(new ResponseModel());
+            var formDto = _mapper.Map<FormDto>(formModel);
+            await _formService.Create(formDto);
+
+            var response = new ResponseModel { Message = "Form was created" };
+            return Ok(response);
         }
 
         [HttpDelete]
         [Route("{id}")]
         public async Task<ActionResult<ResponseModel>> Delete(int id)
         {
-            return Ok(new ResponseModel());
+            await _formService.Delete(id);
+
+            var response = new ResponseModel { Message = "Form was deleted" };
+            return Ok(response);
         }
 
         [HttpPut]
-        [Route("{id}")]
-        public async Task<ActionResult<ResponseModel>> Update(int id, [FromBody] FormModel post)
+        [Route("")]
+        public async Task<ActionResult<ResponseModel>> Update([FromBody] FormModel form)
         {
-            return Ok(new ResponseModel());
+            var formDto = _mapper.Map<FormDto>(form);
+            await _formService.Update(formDto);
+
+            var response = new ResponseModel { Message = "Form was updated" };
+            return Ok(response);
         }
     }
 }

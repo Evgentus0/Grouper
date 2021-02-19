@@ -1,7 +1,12 @@
+using Grouper.Api.Data.Context;
+using Grouper.Api.Data.Entities;
+using Grouper.Api.Infrastructure.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -22,6 +27,7 @@ namespace Grouper.Api.Web
         }
 
         public IConfiguration Configuration { get; }
+        protected ILoggerFactory LoggerFactory;
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -32,6 +38,8 @@ namespace Grouper.Api.Web
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Grouper.Api.Web", Version = "v1" });
             });
+
+            services.AddData(Configuration, LoggerFactory);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -41,6 +49,8 @@ namespace Grouper.Api.Web
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.InitDbIfNotExist();
 
             app.UseSwagger();
             app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Grouper.Api.Web v1"));

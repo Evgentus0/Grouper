@@ -1,4 +1,7 @@
-﻿using Grouper.Api.Web.Models;
+﻿using AutoMapper;
+using Grouper.Api.Infrastructure.DTOs;
+using Grouper.Api.Infrastructure.Interfaces;
+using Grouper.Api.Web.Models;
 using Grouper.Api.Web.Models.Outbound;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -13,51 +16,74 @@ namespace Grouper.Api.Web.Controllers
     [ApiController]
     public class PostController : ControllerBase
     {
+        private readonly IPostService _postService;
+        private readonly IMapper _mapper;
+
+        public PostController(IPostService postService, IMapper mapper)
+        {
+            _postService = postService;
+            _mapper = mapper;
+        }
 
         [HttpPost]
-        public async Task<ActionResult<ResponseModel>> CreatePost([FromQuery] int groupId, [FromBody] PostModel post)
+        public async Task<ActionResult<ResponseModel>> CreatePost([FromBody] PostModel post)
         {
-            var r = new ResponseModel();
+            var postDto = _mapper.Map<PostDto>(post);
+            await _postService.Create(postDto);
 
-            return Ok(r);
+            var response = new ResponseModel { Message = "Post was created" };
+            return Ok(response);
         }
 
         [HttpGet]
         public async Task<ActionResult<List<PostModel>>> GetByGroupId([FromQuery] int groupId)
         {
-            var lp = new List<PostModel>();
+            List<PostDto> postDtos = await _postService.GetByGroupId(groupId);
+            var result = _mapper.Map<List<PostModel>>(postDtos);
 
-            return Ok(lp);
+            return Ok(result);
         }
 
         [HttpGet]
         [Route("{id}")]
         public async Task<ActionResult<PostModel>> GetById(int id)
         {
-            var p = new PostModel();
-            return Ok(p);
+            PostDto postDto = await _postService.GetById(id);
+            var result = _mapper.Map<PostModel>(postDto);
+
+            return Ok(result);
         }
 
         [HttpPost]
-        [Route("{postId}/add-comment")]
-        public async Task<ActionResult<ResponseModel>> AddComment(int postId, [FromBody]CommentModel comment)
+        [Route("add-comment")]
+        public async Task<ActionResult<ResponseModel>> AddComment([FromBody]CommentModel comment)
         {
-            var p = new ResponseModel();
-            return Ok(p);
+            var commentDto = _mapper.Map<CommentDto>(comment);
+            await _postService.AddComment(commentDto);
+
+            var response = new ResponseModel { Message = "Comment was added" };
+            return Ok(response);
         }
 
         [HttpDelete]
         [Route("{id}")]
         public async Task<ActionResult<ResponseModel>> Delete(int id)
         {
-            return Ok(new ResponseModel());
+            await _postService.Delete(id);
+
+            var response = new ResponseModel { Message = "Post was deleted" };
+            return Ok(response);
         }
 
         [HttpPut]
-        [Route("{id}")]
-        public async Task<ActionResult<ResponseModel>> Update(int id, [FromBody]PostModel post)
+        [Route("")]
+        public async Task<ActionResult<ResponseModel>> Update([FromBody]PostModel post)
         {
-            return Ok(new ResponseModel());
+            var postDto = _mapper.Map<PostDto>(post);
+            await _postService.Update(postDto);
+
+            var response = new ResponseModel { Message = "Post was updated" };
+            return Ok(response);
         }
     }
 }

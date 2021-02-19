@@ -1,4 +1,7 @@
-﻿using Grouper.Api.Web.Models;
+﻿using AutoMapper;
+using Grouper.Api.Infrastructure.DTOs;
+using Grouper.Api.Infrastructure.Interfaces;
+using Grouper.Api.Web.Models;
 using Grouper.Api.Web.Models.Outbound;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -13,59 +16,82 @@ namespace Grouper.Api.Web.Controllers
     [ApiController]
     public class GroupController : ControllerBase
     {
-        [HttpGet]
-        public async Task<ActionResult<List<GroupModel>>> Get([FromQuery] int userId)
+        private readonly IGroupService _groupService;
+        private readonly IMapper _mapper;
+
+        public GroupController(IGroupService groupService, IMapper mapper)
         {
-            var groups = new List<GroupModel>();
-            return Ok(groups);
+            _groupService = groupService;
+            _mapper = mapper;
+        }
+        [HttpGet]
+        public async Task<ActionResult<List<GroupModel>>> Get([FromQuery] string userId)
+        {
+            List<GroupDto> groupDtos = await _groupService.GetByUserId(userId);
+            var result = _mapper.Map<List<GroupModel>>(groupDtos);
+
+            return Ok(result);  
         }
 
         [HttpGet]
         [Route("{id}")]
         public async Task<ActionResult<GroupModel>> GetById(int id)
         {
-            var group = new GroupModel();
-            return Ok(group);
+            GroupDto groupDto = await _groupService.GetById(id);
+            var result = _mapper.Map<GroupModel>(groupDto);
+
+            return Ok(result);
         }
 
         [HttpPost]
         public async Task<ActionResult<ResponseModel>> Create([FromBody] GroupModel group)
         {
-            var resp = new ResponseModel();
+            var groupDto = _mapper.Map<GroupDto>(group);
+            await _groupService.Create(groupDto);
 
-            return Ok(resp);
+            var response = new ResponseModel { Message = "Group was created" };
+            return Ok(response);
         }
         
         [HttpPost]
         [Route("{groupId}/add-user")]
-        public async Task<ActionResult<ResponseModel>> AddUser(int groupId, [FromQuery]int userId)
+        public async Task<ActionResult<ResponseModel>> AddUser(int groupId, [FromQuery]string userId)
         {
-            var r = new ResponseModel();
+            await _groupService.AddUser(groupId, userId);
 
-            return Ok(r);
+            var response = new ResponseModel { Message = "User was added" };
+            return Ok(response);
         }
 
         [HttpPost]
         [Route("{groupId}/add-links")]
-        public async Task<ActionResult<ResponseModel>> AddUser(int groupId, [FromBody] List<string> links)
+        public async Task<ActionResult<ResponseModel>> AddLinks(int groupId, [FromBody] List<string> links)
         {
-            var r = new ResponseModel();
+            await _groupService.AddLinks(groupId, links);
 
-            return Ok(r);
+            var response = new ResponseModel { Message = "Links was added" };
+            return Ok(response);
         }
 
         [HttpDelete]
         [Route("{id}")]
         public async Task<ActionResult<ResponseModel>> Delete(int id)
         {
-            return Ok(new ResponseModel());
+            await _groupService.Delete(id);
+
+            var response = new ResponseModel { Message = "Group was deleted" };
+            return Ok(response);
         }
 
         [HttpPut]
-        [Route("{id}")]
-        public async Task<ActionResult<ResponseModel>> Update(int id, [FromBody] GroupModel post)
+        [Route("")]
+        public async Task<ActionResult<ResponseModel>> Update([FromBody] GroupModel group)
         {
-            return Ok(new ResponseModel());
+            var groupDto = _mapper.Map<GroupDto>(group);
+            await _groupService.Update(groupDto);
+
+            var response = new ResponseModel { Message = "Group was updated" };
+            return Ok(response);
         }
     }
 }
