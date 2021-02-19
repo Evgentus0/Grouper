@@ -12,7 +12,13 @@ namespace Grouper.Api.Web.Automapper
     {
         public DtoModelMapperProfile()
         {
-            CreateMap<UserModel, UserDto>();
+            CreateMap<UserDto, UserModel>().ReverseMap();
+
+            CreateMap<FormDto, FormModel>().ReverseMap();
+
+            CreateMap<GroupDto, GroupModel>().ReverseMap();
+
+            CreateMap<PostDto, PostModel>().ReverseMap();
         }
     }
 }
