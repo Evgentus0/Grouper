@@ -34,7 +34,7 @@ namespace Grouper.Api.Data.Repositories
         {
             var group = await _context.Groups.FirstOrDefaultAsync(x => x.Id == id);
 
-            if(group != null)
+            if (group != null)
             {
                 _context.Groups.Remove(group);
             }

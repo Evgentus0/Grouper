@@ -33,7 +33,7 @@ namespace Grouper.Api.Data.Repositories
         {
             var post = await _context.Posts.FirstOrDefaultAsync(x => x.Id == id);
 
-            if(post != null)
+            if (post != null)
             {
                 _context.Posts.Remove(post);
             }

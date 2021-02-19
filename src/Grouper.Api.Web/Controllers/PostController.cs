@@ -58,7 +58,7 @@ namespace Grouper.Api.Web.Controllers
 
         [HttpPost]
         [Route("add-comment")]
-        public async Task<ActionResult<ResponseModel>> AddComment([FromBody]CommentModel comment)
+        public async Task<ActionResult<ResponseModel>> AddComment([FromBody] CommentModel comment)
         {
             var commentDto = _mapper.Map<CommentDto>(comment);
             await _postService.AddComment(commentDto);
@@ -79,7 +79,7 @@ namespace Grouper.Api.Web.Controllers
 
         [HttpPut]
         [Route("")]
-        public async Task<ActionResult<ResponseModel>> Update([FromBody]PostModel post)
+        public async Task<ActionResult<ResponseModel>> Update([FromBody] PostModel post)
         {
             var postDto = _mapper.Map<PostDto>(post);
             await _postService.Update(postDto);

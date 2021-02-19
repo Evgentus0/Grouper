@@ -47,7 +47,7 @@ namespace Grouper.Api.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<ResponseModel>> Create([FromBody]FormModel formModel)
+        public async Task<ActionResult<ResponseModel>> Create([FromBody] FormModel formModel)
         {
             var formDto = _mapper.Map<FormDto>(formModel);
             await _formService.Create(formDto);

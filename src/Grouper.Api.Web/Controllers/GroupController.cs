@@ -62,7 +62,7 @@ namespace Grouper.Api.Web.Controllers
         
         [HttpPost]
         [Route("{groupId}/add-user")]
-        public async Task<ActionResult<ResponseModel>> AddUser(int groupId, [FromQuery]string userId)
+        public async Task<ActionResult<ResponseModel>> AddUser(int groupId, [FromQuery] string userId)
         {
             await _groupService.AddUser(groupId, userId);
 

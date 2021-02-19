@@ -28,7 +28,7 @@ namespace Grouper.Api.Data.Repositories
         public async Task Delete(int id)
         {
             var form = await _context.Forms.FirstOrDefaultAsync(x => x.Id == id);
-            if(form != null)
+            if (form != null)
             {
                 _context.Forms.Remove(form);
             }
@@ -44,7 +44,7 @@ namespace Grouper.Api.Data.Repositories
             var user = await _context.Users.Include(x => x.Forms)
                 .FirstOrDefaultAsync(x => x.Id == userId);
 
-            if(user != null)
+            if (user != null)
             {
                 return user.Forms;
             }
