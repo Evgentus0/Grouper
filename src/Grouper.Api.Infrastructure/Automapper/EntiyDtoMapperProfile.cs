@@ -13,7 +13,9 @@ namespace Grouper.Api.Infrastructure.Automapper
     {
         public EntiyDtoMapperProfile()
         {
-            CreateMap<UserDto, ApplicationUser>().ReverseMap();
+            CreateMap<UserDto, ApplicationUser>()
+                .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.Email))
+                .ReverseMap();
 
             CreateMap<FormDto, Form>().ReverseMap();
 
