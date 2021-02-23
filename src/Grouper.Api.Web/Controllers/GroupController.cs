@@ -16,7 +16,7 @@ namespace Grouper.Api.Web.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(AuthenticationSchemes = "Bearer", 
+    [Authorize(AuthenticationSchemes = "Bearer",
         Roles = "teacher")]
     public class GroupController : ControllerBase
     {

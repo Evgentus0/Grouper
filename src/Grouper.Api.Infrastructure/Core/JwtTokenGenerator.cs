@@ -32,7 +32,7 @@ namespace Grouper.Api.Infrastructure.Core
                 {
                     new Claim(JwtRegisteredClaimNames.Sub, user.Id),
                     new Claim(JwtRegisteredClaimNames.Email, user.Email),
-                    new Claim(JwtRegisteredClaimNames.Actort, user.Role),
+                    new Claim("role", user.Role),
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 };
 
