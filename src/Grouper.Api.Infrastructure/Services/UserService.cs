@@ -29,6 +29,15 @@ namespace Grouper.Api.Infrastructure.Services
             _tokenHandler = tokenHandler;
         }
 
+        public async Task<UserDto> GetInfo(string id)
+        {
+            var appUser = await _dataBase.UserManager.FindByIdAsync(id);
+            var userDto = _mapper.Map<UserDto>(appUser);
+
+            userDto.Role = (await _dataBase.UserManager.GetRolesAsync(appUser)).FirstOrDefault();
+            return userDto;
+        }
+
         public async Task<string> SignIn(UserDto userDto)
         {
             var appUser = await _dataBase.UserManager.FindByEmailAsync(userDto.Email);

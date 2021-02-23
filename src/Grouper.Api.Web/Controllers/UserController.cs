@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Grouper.Api.Infrastructure.DTOs;
+using Grouper.Api.Infrastructure.Exceptions;
 using Grouper.Api.Infrastructure.Interfaces;
 using Grouper.Api.Web.Models;
 using Grouper.Api.Web.Models.Outbound;
@@ -10,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Grouper.Api.Web.Controllers
@@ -46,6 +48,21 @@ namespace Grouper.Api.Web.Controllers
             await _userService.SignUp(userDto);
 
             var result = new ResponseModel { Message = "User was created" };
+
+            return Ok(result);
+        }
+
+        [HttpGet]
+        [Route("user-info")]
+        [Authorize(AuthenticationSchemes = "Bearer")]
+        public async Task<ActionResult<UserModel>> GetInfo()
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value 
+                ?? throw new ApiException(System.Net.HttpStatusCode.InternalServerError, "Can not find name indentifier in claims");
+
+            UserDto user = await _userService.GetInfo(userId);
+
+            var result = _mapper.Map<UserModel>(user);
 
             return Ok(result);
         }

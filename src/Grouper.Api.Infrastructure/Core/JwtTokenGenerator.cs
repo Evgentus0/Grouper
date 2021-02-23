@@ -30,9 +30,10 @@ namespace Grouper.Api.Infrastructure.Core
 
                 var claims = new[]
                 {
-                new Claim(JwtRegisteredClaimNames.Sub, user.Email),
-                new Claim("role", user.Role),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                    new Claim(JwtRegisteredClaimNames.Sub, user.Id),
+                    new Claim(JwtRegisteredClaimNames.Email, user.Email),
+                    new Claim(JwtRegisteredClaimNames.Actort, user.Role),
+                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 };
 
                 var token = new JwtSecurityToken(

@@ -12,5 +12,6 @@ namespace Grouper.Api.Infrastructure.Interfaces
     {
         Task<string> SignIn(UserDto userDto);
         Task SignUp(UserDto userDto);
+        Task<UserDto> GetInfo(string id);
     }
 }

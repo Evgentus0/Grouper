@@ -57,7 +57,7 @@ namespace Grouper.Api.Web
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Grouper.Api.Web", Version = "v1" });
             });
 
-            services.AddData(Configuration, LoggerFactory);
+            services.AddData(Configuration, LoggerFactory, Settings);
 
             services.AddAutoMapper(config => 
             {
