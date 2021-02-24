@@ -9,7 +9,7 @@ namespace Grouper.Api.Data.Interfaces
 {
     public interface IGroupRepository
     {
-        Task<Group> GetById(int groupId);
+        Task<(Group group, List<ApplicationUser> participants)> GetById(int groupId);
         Task Update(Group group);
         Task AddUserToGroup(int groupId, string userId);
         Task Create(Group group);

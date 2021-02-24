@@ -40,9 +40,19 @@ namespace Grouper.Api.Data.Repositories
             }
         }
 
-        public async Task<Group> GetById(int groupId)
+        public async Task<(Group group, List<ApplicationUser> participants)> GetById(int groupId)
         {
-            return await _context.Groups.FirstOrDefaultAsync(x => x.Id == groupId);
+            var group =  await _context.Groups
+                                .Include(x => x.ChildGroups)
+                                .FirstOrDefaultAsync(x => x.Id == groupId);
+
+            var participants = await _context.UsersGroups
+                                .Include(x => x.User)
+                                .Where(x => x.GroupId == group.Id)
+                                .Select(x => x.User)
+                                .ToListAsync();
+
+            return (group, participants);
         }
 
         public async Task<List<Group>> GetByUserId(string userId)

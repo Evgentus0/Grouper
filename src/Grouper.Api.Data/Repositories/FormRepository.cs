@@ -36,7 +36,8 @@ namespace Grouper.Api.Data.Repositories
 
         public async Task<Form> GetById(int id)
         {
-            return await _context.Forms.FirstOrDefaultAsync(x => x.Id == id); ;
+            return await _context.Forms
+                .FirstOrDefaultAsync(x => x.Id == id); ;
         }
 
         public async Task<List<Form>> GetByUserId(string userId)
