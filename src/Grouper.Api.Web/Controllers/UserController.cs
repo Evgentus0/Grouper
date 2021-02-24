@@ -37,7 +37,7 @@ namespace Grouper.Api.Web.Controllers
             var userDto = _mapper.Map<UserDto>(user);
             string token = await _userService.SignIn(userDto);
 
-            return Ok(new { token = token});
+            return Ok(new { token = token });
         }
 
         [HttpPost]

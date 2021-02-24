@@ -13,8 +13,7 @@ namespace Grouper.Api.Data.Context
     {
         public static void Initialize(GrouperDbContext context, IUnitOfWork unitOfWork)
         {
-            var notExist = context.Database.EnsureCreated();
-            var alreadyExis = !notExist;
+            var alreadyExis = !context.Database.EnsureCreated();
 
             if (alreadyExis)
             {
@@ -43,7 +42,7 @@ namespace Grouper.Api.Data.Context
 
             roles.ForEach(role =>
             {
-                var _ = unitOfWork.RoleManager.CreateAsync(role).Result;
+                unitOfWork.RoleManager.CreateAsync(role).Wait();
             });
             unitOfWork.Save();
             #endregion
@@ -78,7 +77,7 @@ namespace Grouper.Api.Data.Context
 
             users.ForEach(user =>
             {
-                var _ = unitOfWork.UserManager.CreateAsync(user, "Password1").Result;
+                unitOfWork.UserManager.CreateAsync(user, "Password1").Wait();
             });
             unitOfWork.Save();
 
@@ -86,9 +85,9 @@ namespace Grouper.Api.Data.Context
             var teacherUser = unitOfWork.UserManager.FindByEmailAsync("testTeacher@test.com").Result;
             var adminUser = unitOfWork.UserManager.FindByEmailAsync("testAdmin@test.com").Result;
 
-            var _ = unitOfWork.UserManager.AddToRoleAsync(studentUser, "student").Result;
-            _ = unitOfWork.UserManager.AddToRoleAsync(teacherUser, "teacher").Result;
-            _ = unitOfWork.UserManager.AddToRoleAsync(adminUser, "admin").Result;
+            unitOfWork.UserManager.AddToRoleAsync(studentUser, "student").Wait();
+            unitOfWork.UserManager.AddToRoleAsync(teacherUser, "teacher").Wait();
+            unitOfWork.UserManager.AddToRoleAsync(adminUser, "admin").Wait();
 
             unitOfWork.Save();
             #endregion

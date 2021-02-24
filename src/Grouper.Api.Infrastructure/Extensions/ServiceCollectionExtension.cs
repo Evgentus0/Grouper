@@ -26,7 +26,7 @@ namespace Grouper.Api.Infrastructure.Extensions
             services.AddDbContext<GrouperDbContext>(options =>
             {
                 var optionsBuilder = options.UseLoggerFactory(loggerFactory)
-                .EnableSensitiveDataLogging();
+                                            .EnableSensitiveDataLogging();
 
                 if (settings.UseInMemoryDb)
                 {

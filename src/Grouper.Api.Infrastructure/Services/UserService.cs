@@ -42,7 +42,7 @@ namespace Grouper.Api.Infrastructure.Services
         {
             var appUser = await _dataBase.UserManager.FindByEmailAsync(userDto.Email);
 
-            if (appUser != null)
+            if (appUser is not null)
             {
                 bool isAuthenticate = await _dataBase.UserManager.CheckPasswordAsync(appUser, userDto.Password);
                 if (isAuthenticate)
