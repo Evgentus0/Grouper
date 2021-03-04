@@ -20,16 +20,37 @@ namespace Grouper.Api.Infrastructure.Extensions
     {
         public static IServiceCollection AddData(this IServiceCollection services, 
             IConfiguration configuration,
-            ILoggerFactory loggerFactory)
+            ILoggerFactory loggerFactory,
+            AppSettings settings)
         {
             services.AddDbContext<GrouperDbContext>(options =>
             {
-                options.UseLoggerFactory(loggerFactory)
-                .EnableSensitiveDataLogging()
-                .UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
+                var optionsBuilder = options.UseLoggerFactory(loggerFactory)
+                                            .EnableSensitiveDataLogging();
+
+                if (settings.UseInMemoryDb)
+                {
+                    optionsBuilder.UseInMemoryDatabase("InMemoryDb");
+                }
+                else
+                {
+                    optionsBuilder.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
+                }
             });
 
-            services.AddIdentity<ApplicationUser, IdentityRole>()
+            services.AddIdentity<ApplicationUser, IdentityRole>(options => 
+            {
+                options.User.RequireUniqueEmail = true;
+
+                options.Password = new PasswordOptions
+                {
+                    RequireDigit = false,
+                    RequiredUniqueChars = 0,
+                    RequireLowercase = false,
+                    RequireNonAlphanumeric = false,
+                    RequireUppercase = false
+                };
+            })
                 .AddEntityFrameworkStores<GrouperDbContext>();
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();

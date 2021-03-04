@@ -3,6 +3,7 @@ using Grouper.Api.Infrastructure.DTOs;
 using Grouper.Api.Infrastructure.Interfaces;
 using Grouper.Api.Web.Models;
 using Grouper.Api.Web.Models.Outbound;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -14,6 +15,7 @@ namespace Grouper.Api.Web.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(AuthenticationSchemes = "Bearer")]
     public class PostController : ControllerBase
     {
         private readonly IPostService _postService;
@@ -56,7 +58,7 @@ namespace Grouper.Api.Web.Controllers
 
         [HttpPost]
         [Route("add-comment")]
-        public async Task<ActionResult<ResponseModel>> AddComment([FromBody]CommentModel comment)
+        public async Task<ActionResult<ResponseModel>> AddComment([FromBody] CommentModel comment)
         {
             var commentDto = _mapper.Map<CommentDto>(comment);
             await _postService.AddComment(commentDto);
@@ -77,7 +79,7 @@ namespace Grouper.Api.Web.Controllers
 
         [HttpPut]
         [Route("")]
-        public async Task<ActionResult<ResponseModel>> Update([FromBody]PostModel post)
+        public async Task<ActionResult<ResponseModel>> Update([FromBody] PostModel post)
         {
             var postDto = _mapper.Map<PostDto>(post);
             await _postService.Update(postDto);

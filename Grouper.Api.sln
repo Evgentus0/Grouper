@@ -7,7 +7,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Grouper.Api.Web", "src\Grou
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Grouper.Api.Data", "src\Grouper.Api.Data\Grouper.Api.Data.csproj", "{CA68B5FE-6B72-47FE-8C19-8A649918D784}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Grouper.Api.Infrastructure", "src\Grouper.Api.Infrastructure\Grouper.Api.Infrastructure.csproj", "{31530FE3-270E-46F1-A464-67F546437375}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Grouper.Api.Infrastructure", "src\Grouper.Api.Infrastructure\Grouper.Api.Infrastructure.csproj", "{31530FE3-270E-46F1-A464-67F546437375}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{A21E0729-803F-4DC3-B04A-11643B808221}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -30,6 +32,11 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{9FFD5A98-B9EA-4BD3-92B2-B0C1B0539A8A} = {A21E0729-803F-4DC3-B04A-11643B808221}
+		{CA68B5FE-6B72-47FE-8C19-8A649918D784} = {A21E0729-803F-4DC3-B04A-11643B808221}
+		{31530FE3-270E-46F1-A464-67F546437375} = {A21E0729-803F-4DC3-B04A-11643B808221}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F367FA31-E639-4C6E-B78A-CD8A85DD78F4}

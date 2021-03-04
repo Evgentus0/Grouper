@@ -33,7 +33,7 @@ namespace Grouper.Api.Data.Repositories
         {
             var post = await _context.Posts.FirstOrDefaultAsync(x => x.Id == id);
 
-            if(post != null)
+            if (post is not null)
             {
                 _context.Posts.Remove(post);
             }
@@ -41,16 +41,21 @@ namespace Grouper.Api.Data.Repositories
 
         public async Task<List<Post>> GetByGroupId(int groupId)
         {
-            var group = await _context.Groups
-                .Include(x => x.Tasks)
-                .FirstOrDefaultAsync(x => x.Id == groupId);
-
-            return group.Tasks;
+            return await _context.Posts
+                    .Include(x => x.Comments)
+                    .Include(x => x.Forms)
+                    .Include(x => x.Group)
+                    .Where(x => x.GroupId == groupId)
+                    .ToListAsync();
         }
 
         public async Task<Post> GetById(int id)
         {
-            return await _context.Posts.FirstOrDefaultAsync(x => x.Id == id);
+            return await _context.Posts
+                    .Include(x => x.Comments)
+                    .Include(x => x.Forms)
+                    .Include(x => x.Group)
+                    .FirstOrDefaultAsync(x => x.Id == id);
         }
 
         public Task Update(Post post)

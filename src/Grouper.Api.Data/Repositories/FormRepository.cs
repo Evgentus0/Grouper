@@ -28,7 +28,7 @@ namespace Grouper.Api.Data.Repositories
         public async Task Delete(int id)
         {
             var form = await _context.Forms.FirstOrDefaultAsync(x => x.Id == id);
-            if(form != null)
+            if (form is not null)
             {
                 _context.Forms.Remove(form);
             }
@@ -36,15 +36,16 @@ namespace Grouper.Api.Data.Repositories
 
         public async Task<Form> GetById(int id)
         {
-            return await _context.Forms.FirstOrDefaultAsync(x => x.Id == id); ;
+            return await _context.Forms
+                .FirstOrDefaultAsync(x => x.Id == id); ;
         }
 
         public async Task<List<Form>> GetByUserId(string userId)
         {
             var user = await _context.Users.Include(x => x.Forms)
-                .FirstOrDefaultAsync(x => x.Id == userId);
+                                        .FirstOrDefaultAsync(x => x.Id == userId);
 
-            if(user != null)
+            if (user is not null)
             {
                 return user.Forms;
             }

@@ -15,6 +15,7 @@ namespace Grouper.Api.Data.Interfaces
         IPostRepository PostRepository { get; }
 
         UserManager<ApplicationUser> UserManager { get; }
+        RoleManager<IdentityRole> RoleManager { get; }
 
         void Save();
         Task SaveAsync();

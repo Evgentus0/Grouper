@@ -29,7 +29,7 @@ namespace Grouper.Api.Infrastructure.Services
         {
             var usefulContent = links.Aggregate((x, y) => $"{x}{_setting.UsefulLinksSeparator}{y}");
             usefulContent += _setting.UsefulLinksSeparator;
-            var group = await _dataBase.GroupRepository.GetById(groupId);
+            var group = (await _dataBase.GroupRepository.GetById(groupId)).group;
 
             group.UsefulContent += usefulContent;
 
@@ -59,9 +59,11 @@ namespace Grouper.Api.Infrastructure.Services
 
         public async Task<GroupDto> GetById(int id)
         {
-            Group group = await _dataBase.GroupRepository.GetById(id);
+            var result = await _dataBase.GroupRepository.GetById(id);
 
-            var groupDto = _mapper.Map<GroupDto>(group);
+            var groupDto = _mapper.Map<GroupDto>(result.group);
+
+            groupDto.Participants = _mapper.Map<List<UserDto>>(result.participants);
 
             return groupDto;
         }
