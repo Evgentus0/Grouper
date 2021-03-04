@@ -43,7 +43,9 @@ namespace Grouper.Api.Data.Repositories
         {
             return await _context.Posts
                     .Include(x => x.Comments)
+                    .ThenInclude(x => x.Sender)
                     .Include(x => x.Forms)
+                    .ThenInclude(x => x.User)
                     .Include(x => x.Group)
                     .Where(x => x.GroupId == groupId)
                     .ToListAsync();
@@ -53,7 +55,9 @@ namespace Grouper.Api.Data.Repositories
         {
             return await _context.Posts
                     .Include(x => x.Comments)
+                    .ThenInclude(x => x.Sender)
                     .Include(x => x.Forms)
+                    .ThenInclude(x => x.User)
                     .Include(x => x.Group)
                     .FirstOrDefaultAsync(x => x.Id == id);
         }

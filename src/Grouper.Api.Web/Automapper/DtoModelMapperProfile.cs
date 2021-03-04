@@ -19,6 +19,8 @@ namespace Grouper.Api.Web.Automapper
             CreateMap<GroupDto, GroupModel>().ReverseMap();
 
             CreateMap<PostDto, PostModel>().ReverseMap();
+
+            CreateMap<CommentDto, CommentModel>().ReverseMap();
         }
     }
 }

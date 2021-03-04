@@ -10,7 +10,6 @@ namespace Grouper.Api.Infrastructure.DTOs
     {
         public int Id { get; set; }
         public string Text { get; set; }
-        public PostDto Post { get; set; }
         public UserDto Sender { get; set; }
     }
 }

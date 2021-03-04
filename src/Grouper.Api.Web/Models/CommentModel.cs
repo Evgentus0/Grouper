@@ -9,7 +9,6 @@ namespace Grouper.Api.Web.Models
     {
         public int Id { get; set; }
         public string Text { get; set; }
-        public PostModel Post { get; set; }
         public UserModel Sender { get; set; }
     }
 }

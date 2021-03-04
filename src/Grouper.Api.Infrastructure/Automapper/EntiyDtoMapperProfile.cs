@@ -23,6 +23,7 @@ namespace Grouper.Api.Infrastructure.Automapper
 
             CreateMap<PostDto, Post>().ReverseMap();
 
+            CreateMap<CommentDto, Comment>().ReverseMap();
         }
     }
 }

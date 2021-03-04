@@ -12,7 +12,6 @@ namespace Grouper.Api.Infrastructure.DTOs
         public string Caption { get; set; }
         public string Description { get; set; }
         public List<CommentDto> Comments { get; set; }
-        public GroupDto Group { get; set; }
         public List<FormDto> Forms { get; set; }
     }
 }
