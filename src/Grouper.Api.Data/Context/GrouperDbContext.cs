@@ -27,11 +27,6 @@ namespace Grouper.Api.Data.Context
             builder.Entity<UserGroup>()
                 .ToTable("UserGroup")
                 .HasKey(o => new { o.UserId, o.GroupId });
-
-            builder.Entity<Group>()
-                .HasOne(x => x.ParentGroup)
-                .WithMany(x => x.ChildGroups)
-                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

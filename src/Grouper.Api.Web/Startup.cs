@@ -55,7 +55,7 @@ namespace Grouper.Api.Web
             services.AddControllers()
                 .AddJsonOptions(options =>
                 {
-                    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
+                    //options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
                 });
 
             services.AddSwaggerGen(c =>
