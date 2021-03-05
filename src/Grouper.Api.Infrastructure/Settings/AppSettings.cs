@@ -9,7 +9,7 @@ namespace Grouper.Api.Infrastructure.Settings
     public class AppSettings
     {
         public string UsefulLinksSeparator { get; set; }
-        public bool UseInMemoryDb { get; set; }
+        public DbType DbType { get; set; }
         public AuthorizationSettings Authorization { get; set; }
     }
 }

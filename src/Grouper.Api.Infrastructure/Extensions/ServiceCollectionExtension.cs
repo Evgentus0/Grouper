@@ -28,13 +28,16 @@ namespace Grouper.Api.Infrastructure.Extensions
                 var optionsBuilder = options.UseLoggerFactory(loggerFactory)
                                             .EnableSensitiveDataLogging();
 
-                if (settings.UseInMemoryDb)
+                switch (settings.DbType)
                 {
-                    optionsBuilder.UseInMemoryDatabase("InMemoryDb");
-                }
-                else
-                {
-                    optionsBuilder.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
+                    case DbType.MsSqlServer:
+                        optionsBuilder.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
+                        break;
+                    case DbType.InMemory:
+                        optionsBuilder.UseInMemoryDatabase("InMemoryDb");
+                        break;
+                    default:
+                        throw new ArgumentException($"Incorrect db type {settings.DbType}");
                 }
             });
 
