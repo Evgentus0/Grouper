@@ -20,64 +20,70 @@ namespace Grouper.Api.Infrastructure.Services
         private readonly IMapper _mapper;
         private readonly IJwtTokenGenerator _tokenGenerator;
         private readonly JwtSecurityTokenHandler _tokenHandler;
+        private readonly IExecutionStrategy _strategy;
 
-        public UserService(IUnitOfWork dataBase, IMapper mapper, IJwtTokenGenerator tokenGenerator, JwtSecurityTokenHandler tokenHandler)
+        public UserService(IUnitOfWork dataBase, IMapper mapper, 
+            IJwtTokenGenerator tokenGenerator, JwtSecurityTokenHandler tokenHandler,
+            IExecutionStrategy strategy)
         {
             _dataBase = dataBase;
             _mapper = mapper;
             _tokenGenerator = tokenGenerator;
             _tokenHandler = tokenHandler;
+            _strategy = strategy;
         }
 
         public async Task<UserDto> GetInfo(string id)
         {
-            var appUser = await _dataBase.UserManager.FindByIdAsync(id);
-            var userDto = _mapper.Map<UserDto>(appUser);
+            return await _strategy.ExecuteAsync(async () =>
+            {
+                var appUser = await _dataBase.UserManager.FindByIdAsync(id);
+                var userDto = _mapper.Map<UserDto>(appUser);
 
-            userDto.Role = (await _dataBase.UserManager.GetRolesAsync(appUser)).FirstOrDefault();
-            return userDto;
+                userDto.Role = (await _dataBase.UserManager.GetRolesAsync(appUser)).FirstOrDefault();
+                return userDto;
+            });
         }
 
         public async Task<string> SignIn(UserDto userDto)
         {
-            var appUser = await _dataBase.UserManager.FindByEmailAsync(userDto.Email);
-
-            if (appUser is not null)
+            return await _strategy.ExecuteAsync(async () =>
             {
-                bool isAuthenticate = await _dataBase.UserManager.CheckPasswordAsync(appUser, userDto.Password);
-                if (isAuthenticate)
-                {
-                    var verifiedUser = _mapper.Map<UserDto>(appUser);
-                    verifiedUser.Role = (await _dataBase.UserManager.GetRolesAsync(appUser)).FirstOrDefault();
+                var appUser = await _dataBase.UserManager.FindByEmailAsync(userDto.Email);
 
-                    var token = await _tokenGenerator.GenerateToken(verifiedUser);
-
-                    return _tokenHandler.WriteToken(token);
-                }
-                else
+                if (appUser is not null)
                 {
-                    throw new ApiException(HttpStatusCode.BadRequest, "Incorrect login and/or password");
+                    bool isAuthenticate = await _dataBase.UserManager.CheckPasswordAsync(appUser, userDto.Password);
+                    if (isAuthenticate)
+                    {
+                        var verifiedUser = _mapper.Map<UserDto>(appUser);
+                        verifiedUser.Role = (await _dataBase.UserManager.GetRolesAsync(appUser)).FirstOrDefault();
+
+                        var token = await _tokenGenerator.GenerateToken(verifiedUser);
+
+                        return _tokenHandler.WriteToken(token);
+                    }
                 }
-            }
-            else
-            {
                 throw new ApiException(HttpStatusCode.BadRequest, "Incorrect login and/or password");
-            }
+            });
         }
 
         public async Task SignUp(UserDto userDto)
         {
-            var user = _mapper.Map<ApplicationUser>(userDto);
-            var password = userDto.Password;
-
-            var result = await _dataBase.UserManager.CreateAsync(user, password);
-
-            if (!result.Succeeded)
+            await _strategy.ExecuteAsync(async () =>
             {
-                var errorMessage = result.Errors.Select(x => $"{x.Code} - {x.Description}").ToList();
+                var user = _mapper.Map<ApplicationUser>(userDto);
+                var password = userDto.Password;
 
-                throw new ApiException(HttpStatusCode.InternalServerError, "Can not create user", errorMessage);
-            }
+                var result = await _dataBase.UserManager.CreateAsync(user, password);
+
+                if (!result.Succeeded)
+                {
+                    var errorMessage = result.Errors.Select(x => $"{x.Code} - {x.Description}").ToList();
+
+                    throw new ApiException(HttpStatusCode.InternalServerError, "Can not create user", errorMessage);
+                }
+            });
         }
     }
 }

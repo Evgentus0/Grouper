@@ -7,6 +7,7 @@ using Grouper.Api.Infrastructure.Interfaces;
 using Grouper.Api.Infrastructure.Services;
 using Grouper.Api.Infrastructure.Settings;
 using Grouper.Api.Web.Automapper;
+using Grouper.Api.Web.Middlewares;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -87,6 +88,8 @@ namespace Grouper.Api.Web
 
             services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
             services.AddScoped(x => new JwtSecurityTokenHandler());
+
+            services.AddScoped<IExecutionStrategy, ExecutionStrategy>();
         }
 
         protected virtual void ConfgureAuthentication(IServiceCollection services)
@@ -158,6 +161,8 @@ namespace Grouper.Api.Web
 
             app.UseSwagger();
             app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Grouper.Api.Web v1"));
+
+            app.UseExceptionMiddleware();
 
             app.UseHttpsRedirection();
 
