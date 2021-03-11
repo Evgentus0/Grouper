@@ -75,6 +75,15 @@ namespace Grouper.Api.Web
             ConfigureIoC(services);
 
             ConfgureAuthentication(services);
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowMyOrigin",
+                builder => builder
+                .AllowAnyHeader()
+                .AllowAnyMethod()
+                .AllowAnyOrigin());
+            });
         }
 
         protected virtual void ConfigureIoC(IServiceCollection services)
@@ -156,6 +165,8 @@ namespace Grouper.Api.Web
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseCors("AllowMyOrigin");
 
             app.CreateAndInitIfNotExist();
 

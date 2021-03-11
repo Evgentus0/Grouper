@@ -74,15 +74,21 @@ namespace Grouper.Api.Infrastructure.Services
             {
                 var user = _mapper.Map<ApplicationUser>(userDto);
                 var password = userDto.Password;
+                user.Id = Guid.NewGuid().ToString();
 
                 var result = await _dataBase.UserManager.CreateAsync(user, password);
 
-                if (!result.Succeeded)
+                if (result.Succeeded)
                 {
-                    var errorMessage = result.Errors.Select(x => $"{x.Code} - {x.Description}").ToList();
+                    var createdUser = await _dataBase.UserManager.FindByEmailAsync(userDto.Email);
+                    await _dataBase.UserManager.AddToRoleAsync(createdUser, userDto.Role);
 
-                    throw new ApiException(HttpStatusCode.InternalServerError, "Can not create user", errorMessage);
+                    return;
                 }
+
+                var errorMessage = result.Errors.Select(x => $"{x.Code} - {x.Description}").ToList();
+
+                throw new ApiException(HttpStatusCode.InternalServerError, "Can not create user", errorMessage);
             });
         }
     }

@@ -16,8 +16,6 @@ namespace Grouper.Api.Web.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(AuthenticationSchemes = "Bearer",
-        Roles = "teacher")]
     public class GroupController : ControllerBase
     {
         private readonly IGroupService _groupService;
@@ -30,8 +28,8 @@ namespace Grouper.Api.Web.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "student,teacher")]
-        public async Task<ActionResult<List<GroupModel>>> Get([FromQuery] string userId)
+        [Authorize(Roles = "student,teacher", AuthenticationSchemes = "Bearer")]
+        public async Task<ActionResult<List<GroupModel>>> GetByUserId([FromQuery] string userId)
         {
             List<GroupDto> groupDtos = await _groupService.GetByUserId(userId);
             var result = _mapper.Map<List<GroupModel>>(groupDtos);
@@ -41,7 +39,7 @@ namespace Grouper.Api.Web.Controllers
 
         [HttpGet]
         [Route("{id}")]
-        [Authorize(Roles = "student,teacher")]
+        [Authorize(Roles = "student,teacher", AuthenticationSchemes = "Bearer")]
         public async Task<ActionResult<GroupModel>> GetById(int id)
         {
             GroupDto groupDto = await _groupService.GetById(id);
@@ -51,6 +49,7 @@ namespace Grouper.Api.Web.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "teacher", AuthenticationSchemes = "Bearer")]
         public async Task<ActionResult<ResponseModel>> Create([FromBody] GroupModel group)
         {
             var groupDto = _mapper.Map<GroupDto>(group);
@@ -62,6 +61,7 @@ namespace Grouper.Api.Web.Controllers
         
         [HttpPost]
         [Route("{groupId}/add-user")]
+        [Authorize(Roles = "teacher", AuthenticationSchemes = "Bearer")]
         public async Task<ActionResult<ResponseModel>> AddUser(int groupId, [FromQuery] string userId)
         {
             await _groupService.AddUser(groupId, userId);
@@ -72,6 +72,7 @@ namespace Grouper.Api.Web.Controllers
 
         [HttpPost]
         [Route("{groupId}/add-links")]
+        [Authorize(Roles = "teacher", AuthenticationSchemes = "Bearer")]
         public async Task<ActionResult<ResponseModel>> AddLinks(int groupId, [FromBody] List<string> links)
         {
             await _groupService.AddLinks(groupId, links);
@@ -82,6 +83,7 @@ namespace Grouper.Api.Web.Controllers
 
         [HttpDelete]
         [Route("{id}")]
+        [Authorize(Roles = "teacher", AuthenticationSchemes = "Bearer")]
         public async Task<ActionResult<ResponseModel>> Delete(int id)
         {
             await _groupService.Delete(id);
@@ -92,6 +94,7 @@ namespace Grouper.Api.Web.Controllers
 
         [HttpPut]
         [Route("")]
+        [Authorize(Roles = "teacher", AuthenticationSchemes = "Bearer")]
         public async Task<ActionResult<ResponseModel>> Update([FromBody] GroupModel group)
         {
             var groupDto = _mapper.Map<GroupDto>(group);
