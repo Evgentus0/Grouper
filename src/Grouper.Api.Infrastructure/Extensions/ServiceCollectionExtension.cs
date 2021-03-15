@@ -31,7 +31,7 @@ namespace Grouper.Api.Infrastructure.Extensions
                 switch (settings.DbType)
                 {
                     case DbType.MsSqlServer:
-                        optionsBuilder.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
+                        optionsBuilder.UseSqlServer(configuration.GetConnectionString("MsSqlServerConnection"));
                         break;
                     case DbType.InMemory:
                         optionsBuilder.UseInMemoryDatabase("InMemoryDb");
