@@ -13,5 +13,13 @@ namespace Grouper.Api.Web.Models
         public List<UserModel> Participants { get; set; }
         public List<PostModel> Tasks { get; set; }
         public List<string> UsefulLinks { get; set; }
+
+        public GroupModel()
+        {
+            ChildGroups = new List<GroupModel>();
+            Participants = new List<UserModel>();
+            Tasks = new List<PostModel>();
+            UsefulLinks = new List<string>();
+        }
     }
 }

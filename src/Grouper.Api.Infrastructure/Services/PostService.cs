@@ -30,6 +30,8 @@ namespace Grouper.Api.Infrastructure.Services
                 var comment = _mapper.Map<Comment>(commentDto);
 
                 await _dataBase.PostRepository.AddComment(comment);
+
+                await _dataBase.SaveAsync();
             });
         }
 
@@ -40,6 +42,8 @@ namespace Grouper.Api.Infrastructure.Services
                 var post = _mapper.Map<Post>(postDto);
 
                 await _dataBase.PostRepository.Create(post);
+
+                await _dataBase.SaveAsync();
             });
         }
         
@@ -48,6 +52,8 @@ namespace Grouper.Api.Infrastructure.Services
             await _strategy.ExecuteAsync(async () =>
             {
                 await _dataBase.PostRepository.Delete(id);
+
+                await _dataBase.SaveAsync();
             });
         }
 
@@ -82,6 +88,8 @@ namespace Grouper.Api.Infrastructure.Services
                 var post = _mapper.Map<Post>(postDto);
 
                 await _dataBase.PostRepository.Update(post);
+
+                await _dataBase.SaveAsync();
             });
         }
     }

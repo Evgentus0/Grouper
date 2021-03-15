@@ -17,5 +17,11 @@ namespace Grouper.Api.Data.Entities
         [ForeignKey("GroupId")]
         public Group Group { get; set; }
         public List<Form> Forms { get; set; }
+
+        public Post()
+        {
+            Comments = new List<Comment>();
+            Forms = new List<Form>();
+        }
     }
 }

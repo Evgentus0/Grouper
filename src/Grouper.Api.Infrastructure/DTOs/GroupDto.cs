@@ -14,5 +14,13 @@ namespace Grouper.Api.Infrastructure.DTOs
         public List<UserDto> Participants { get; set; }
         public List<PostDto> Tasks { get; set; }
         public List<string> UsefulLinks { get; set; }
+
+        public GroupDto()
+        {
+            ChildGroups = new List<GroupDto>();
+            Participants = new List<UserDto>();
+            Tasks = new List<PostDto>();
+            UsefulLinks = new List<string>();
+        }
     }
 }

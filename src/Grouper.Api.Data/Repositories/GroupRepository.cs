@@ -27,7 +27,18 @@ namespace Grouper.Api.Data.Repositories
 
         public async Task Create(Group group)
         {
-            await _context.Groups.AddAsync(group);
+            var childGroups = group.ChildGroups;
+            group.ChildGroups = null;
+
+            var result = await _context.Groups.AddAsync(group);
+            await _context.SaveChangesAsync();
+            
+            foreach(var child in childGroups)
+            {
+                child.ParentGroupId = result.Entity.Id;
+
+                await Update(child);
+            }
         }
 
         public async Task Delete(int id)

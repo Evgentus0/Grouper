@@ -12,5 +12,12 @@ namespace Grouper.Api.Web.Models
         public string Description { get; set; }
         public List<CommentModel> Comments { get; set; }
         public List<FormModel> Forms { get; set; }
+        public int GroupId { get; set; }
+
+        public PostModel()
+        {
+            Comments = new List<CommentModel>();
+            Forms = new List<FormModel>();
+        }
     }
 }

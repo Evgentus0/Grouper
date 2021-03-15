@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Linq.Queryable;
 
 namespace Grouper.Api.Data.Repositories
 {
@@ -41,14 +42,29 @@ namespace Grouper.Api.Data.Repositories
 
         public async Task<List<Post>> GetByGroupId(int groupId)
         {
-            return await _context.Posts
-                    .Include(x => x.Comments)
-                    .ThenInclude(x => x.Sender)
-                    .Include(x => x.Forms)
-                    .ThenInclude(x => x.User)
-                    .Include(x => x.Group)
-                    .Where(x => x.GroupId == groupId)
-                    .ToListAsync();
+            var posts = await GetWithParentsPosts(groupId);
+            return posts.ToList();
+        }
+
+        private async Task<IEnumerable<Post>> GetWithParentsPosts(int groupId)
+        {
+            var posts = _context.Posts
+                           .Include(x => x.Comments)
+                           .ThenInclude(x => x.Sender)
+                           .Include(x => x.Forms)
+                           .ThenInclude(x => x.User)
+                           .Include(x => x.Group)
+                           .Where(x => x.GroupId == groupId);
+
+            var group = await _context.Groups
+                .FirstAsync(x => x.Id == groupId);
+
+            if (group.ParentGroupId.HasValue)
+            {
+                posts = posts.Union(await GetWithParentsPosts(group.ParentGroupId.Value));
+            }
+
+            return posts;
         }
 
         public async Task<Post> GetById(int id)

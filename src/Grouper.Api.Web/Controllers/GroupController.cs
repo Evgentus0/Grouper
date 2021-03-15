@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Grouper.Api.Infrastructure.Core;
 using Grouper.Api.Infrastructure.DTOs;
+using Grouper.Api.Infrastructure.Exceptions;
 using Grouper.Api.Infrastructure.Interfaces;
 using Grouper.Api.Web.Models;
 using Grouper.Api.Web.Models.Outbound;
@@ -10,6 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Grouper.Api.Web.Controllers
@@ -53,6 +55,11 @@ namespace Grouper.Api.Web.Controllers
         public async Task<ActionResult<ResponseModel>> Create([FromBody] GroupModel group)
         {
             var groupDto = _mapper.Map<GroupDto>(group);
+
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
+                ?? throw new ApiException(System.Net.HttpStatusCode.InternalServerError, "Can not find name indentifier in claims");
+            groupDto.Participants.Add(new UserDto { Id = userId });
+
             await _groupService.Create(groupDto);
 
             var response = new ResponseModel { Message = "Group was created" };

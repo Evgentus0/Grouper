@@ -17,5 +17,11 @@ namespace Grouper.Api.Data.Entities
         public List<Post> Tasks { get; set; }
         public string UsefulContent { get; set; }
         public List<Group> ChildGroups { get; set; }
+
+        public Group()
+        {
+            Tasks = new List<Post>();
+            ChildGroups = new List<Group>();
+        }
     }
 }

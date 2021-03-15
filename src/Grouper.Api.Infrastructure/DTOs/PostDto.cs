@@ -13,5 +13,12 @@ namespace Grouper.Api.Infrastructure.DTOs
         public string Description { get; set; }
         public List<CommentDto> Comments { get; set; }
         public List<FormDto> Forms { get; set; }
+        public int GroupId { get; set; }
+
+        public PostDto()
+        {
+            Comments = new List<CommentDto>();
+            Forms = new List<FormDto>();
+        }
     }
 }
