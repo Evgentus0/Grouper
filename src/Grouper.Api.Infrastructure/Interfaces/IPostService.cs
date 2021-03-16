@@ -15,5 +15,6 @@ namespace Grouper.Api.Infrastructure.Interfaces
         Task AddComment(CommentDto commentDto);
         Task Delete(int id);
         Task Update(PostDto postDto);
+        Task AcknowledgeUser(int postId, string userId);
     }
 }

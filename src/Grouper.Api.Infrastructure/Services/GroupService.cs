@@ -59,6 +59,14 @@ namespace Grouper.Api.Infrastructure.Services
                 var group = _mapper.Map<Group>(groupDto);
 
                 await _dataBase.GroupRepository.Create(group);
+
+                await _dataBase.SaveAsync();
+
+                foreach (var participant in groupDto.Participants)
+                {
+                    await _dataBase.GroupRepository.AddUserToGroup(group.Id, participant.Id);
+                }
+
                 await _dataBase.SaveAsync();
             });
         }

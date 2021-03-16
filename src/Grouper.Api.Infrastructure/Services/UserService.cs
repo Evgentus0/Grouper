@@ -83,6 +83,7 @@ namespace Grouper.Api.Infrastructure.Services
                     var createdUser = await _dataBase.UserManager.FindByEmailAsync(userDto.Email);
                     await _dataBase.UserManager.AddToRoleAsync(createdUser, userDto.Role);
 
+                    await _dataBase.SaveAsync();
                     return;
                 }
 

@@ -27,6 +27,10 @@ namespace Grouper.Api.Data.Context
             builder.Entity<UserGroup>()
                 .ToTable("UserGroup")
                 .HasKey(o => new { o.UserId, o.GroupId });
+
+            builder.Entity<Post>()
+                .HasMany(x => x.AcknowledgeUsers)
+                .WithMany(x => x.CheckedPosts);
         }
     }
 }
