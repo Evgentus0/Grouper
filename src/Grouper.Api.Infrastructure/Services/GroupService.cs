@@ -58,8 +58,6 @@ namespace Grouper.Api.Infrastructure.Services
             {
                 var group = _mapper.Map<Group>(groupDto);
 
-                var childGroups = group.ChildGroups;
-
                 await _dataBase.GroupRepository.Create(group);
 
                 await _dataBase.SaveAsync();
