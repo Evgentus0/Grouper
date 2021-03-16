@@ -54,6 +54,7 @@ namespace Grouper.Api.Data.Repositories
                            .Include(x => x.Forms)
                            .ThenInclude(x => x.User)
                            .Include(x => x.Group)
+                           .Include(x => x.AcknowledgeUsers)
                            .Where(x => x.GroupId == groupId);
 
             var group = await _context.Groups
@@ -75,6 +76,7 @@ namespace Grouper.Api.Data.Repositories
                     .Include(x => x.Forms)
                     .ThenInclude(x => x.User)
                     .Include(x => x.Group)
+                    .Include(x => x.AcknowledgeUsers)
                     .FirstOrDefaultAsync(x => x.Id == id);
         }
 

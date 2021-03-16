@@ -23,6 +23,21 @@ namespace Grouper.Api.Infrastructure.Services
             _mapper = mapper;
             _strategy = strategy;
         }
+
+        public async Task AcknowledgeUser(int postId, string userId)
+        {
+            var post = await _dataBase.PostRepository.GetById(postId);
+
+            if(!post.AcknowledgeUsers.Select(x => x.Id).Contains(userId))
+            {
+                post.AcknowledgeUsers.Add(await _dataBase.UserManager.FindByIdAsync(userId));
+
+                await _dataBase.PostRepository.Update(post);
+
+                await _dataBase.SaveAsync();
+            }
+        }
+
         public async Task AddComment(CommentDto commentDto)
         {
             await _strategy.ExecuteAsync(async () =>
