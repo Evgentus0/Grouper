@@ -51,6 +51,20 @@ namespace Grouper.Api.Web.Controllers
         }
 
         [HttpPost]
+        [Route("add-with-identificator")]
+        [Authorize(Roles = "student,teacher", AuthenticationSchemes = "Bearer")]
+        public async Task<ActionResult<GroupModel>> AddUserWithIdentificator([FromBody] string identificator)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
+                ?? throw new ApiException(System.Net.HttpStatusCode.InternalServerError, "Can not find name indentifier in claims");
+
+            await _groupService.AddUserWithIdentificator(identificator, userId);
+
+            var response = new ResponseModel { Message = "User was added" };
+            return Ok(response);
+        }
+
+        [HttpPost]
         [Authorize(Roles = "teacher", AuthenticationSchemes = "Bearer")]
         public async Task<ActionResult<ResponseModel>> Create([FromBody] GroupModel group)
         {
@@ -69,22 +83,11 @@ namespace Grouper.Api.Web.Controllers
         [HttpPost]
         [Route("{groupId}/add-user")]
         [Authorize(Roles = "teacher", AuthenticationSchemes = "Bearer")]
-        public async Task<ActionResult<ResponseModel>> AddUser(int groupId, [FromQuery] string userId)
+        public async Task<ActionResult<ResponseModel>> AddUser(int groupId, [FromQuery] string userEmail)
         {
-            await _groupService.AddUser(groupId, userId);
+            await _groupService.AddUser(groupId, userEmail);
 
             var response = new ResponseModel { Message = "User was added" };
-            return Ok(response);
-        }
-
-        [HttpPost]
-        [Route("{groupId}/add-links")]
-        [Authorize(Roles = "teacher", AuthenticationSchemes = "Bearer")]
-        public async Task<ActionResult<ResponseModel>> AddLinks(int groupId, [FromBody] List<string> links)
-        {
-            await _groupService.AddLinks(groupId, links);
-
-            var response = new ResponseModel { Message = "Links was added" };
             return Ok(response);
         }
 

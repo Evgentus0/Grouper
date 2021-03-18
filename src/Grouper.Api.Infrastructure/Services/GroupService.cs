@@ -2,6 +2,7 @@
 using Grouper.Api.Data.Entities;
 using Grouper.Api.Data.Interfaces;
 using Grouper.Api.Infrastructure.DTOs;
+using Grouper.Api.Infrastructure.Exceptions;
 using Grouper.Api.Infrastructure.Interfaces;
 using Grouper.Api.Infrastructure.Settings;
 using System;
@@ -27,27 +28,28 @@ namespace Grouper.Api.Infrastructure.Services
             _strategy = strategy;
         }
 
-        public async Task AddLinks(int groupId, List<string> links)
+        public async Task AddUser(int groupId, string userEmail)
         {
             await _strategy.ExecuteAsync(async () =>
             {
-                var usefulContent = links.Aggregate((x, y) => $"{x}{_setting.UsefulLinksSeparator}{y}");
-                usefulContent += _setting.UsefulLinksSeparator;
-                var group = (await _dataBase.GroupRepository.GetById(groupId)).group;
+                var user = await _dataBase.UserManager.FindByEmailAsync(userEmail);
 
-                group.UsefulContent += usefulContent;
+                if (user is null)
+                    throw new ApiException(System.Net.HttpStatusCode.BadRequest, $"User with email: {userEmail} does not exist");
 
-                await _dataBase.GroupRepository.Update(group);
-
+                await _dataBase.GroupRepository.AddUserToGroup(groupId, user.Id);
                 await _dataBase.SaveAsync();
             });
         }
 
-        public async Task AddUser(int groupId, string userId)
+        public async Task AddUserWithIdentificator(string identificator, string userId)
         {
             await _strategy.ExecuteAsync(async () =>
             {
-                await _dataBase.GroupRepository.AddUserToGroup(groupId, userId);
+                Group group = (await _dataBase.GroupRepository.GetByIdentificator(identificator)).group;
+
+                await _dataBase.GroupRepository.AddUserToGroup(group.Id, userId);
+
                 await _dataBase.SaveAsync();
             });
         }
@@ -57,6 +59,7 @@ namespace Grouper.Api.Infrastructure.Services
             await _strategy.ExecuteAsync(async () =>
             {
                 var group = _mapper.Map<Group>(groupDto);
+                group.Identificator = Guid.NewGuid().ToString();
 
                 await _dataBase.GroupRepository.Create(group);
 

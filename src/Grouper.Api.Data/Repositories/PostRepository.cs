@@ -1,5 +1,6 @@
 ﻿using Grouper.Api.Data.Context;
 using Grouper.Api.Data.Entities;
+using Grouper.Api.Data.Exceptions;
 using Grouper.Api.Data.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -79,11 +80,18 @@ namespace Grouper.Api.Data.Repositories
                     .FirstOrDefaultAsync(x => x.Id == id);
         }
 
-        public Task Update(Post post)
+        public async Task Update(Post post)
         {
-            _context.Posts.Update(post);
+            var updatePost = await _context.Posts.FirstOrDefaultAsync(x => x.Id == post.Id);
 
-            return Task.CompletedTask;
+            if(updatePost is null)
+                throw new DataApiException(nameof(_context.Posts));
+
+            if (!string.IsNullOrEmpty(post.Caption))
+                updatePost.Caption = post.Caption;
+
+            if (!string.IsNullOrEmpty(post.Description))
+                updatePost.Description = post.Description;
         }
     }
 }

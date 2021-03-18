@@ -1,5 +1,6 @@
 ﻿using Grouper.Api.Data.Context;
 using Grouper.Api.Data.Entities;
+using Grouper.Api.Data.Exceptions;
 using Grouper.Api.Data.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -57,6 +58,27 @@ namespace Grouper.Api.Data.Repositories
                                 .Include(x => x.ChildGroups)
                                 .FirstOrDefaultAsync(x => x.Id == groupId);
 
+            if (group is null)
+                throw new DataApiException(nameof(_context.Groups), $"Group with id: {groupId} does not exist");
+
+            var participants = await _context.UsersGroups
+                                .Include(x => x.User)
+                                .Where(x => x.GroupId == group.Id)
+                                .Select(x => x.User)
+                                .ToListAsync();
+
+            return (group, participants);
+        }
+
+        public async Task<(Group group, List<ApplicationUser> participants)> GetByIdentificator(string identificator)
+        {
+            var group = await _context.Groups
+                                .Include(x => x.ChildGroups)
+                                .FirstOrDefaultAsync(x => x.Identificator == identificator);
+
+            if (group is null)
+                throw new DataApiException(nameof(_context.Groups), $"Group with identificator: {identificator} does not exist");
+
             var participants = await _context.UsersGroups
                                 .Include(x => x.User)
                                 .Where(x => x.GroupId == group.Id)
@@ -75,11 +97,29 @@ namespace Grouper.Api.Data.Repositories
                 .ToListAsync();
         }
 
-        public Task Update(Group group)
+        public async Task Update(Group group)
         {
-            _context.Groups.Update(group);
+            var updateGroup = await _context.Groups.FirstOrDefaultAsync(x => x.Id == group.Id);
 
-            return Task.CompletedTask;
+            if (updateGroup is null)
+                throw new DataApiException(nameof(_context.Groups));
+
+            if (!string.IsNullOrEmpty(group.Description))
+                updateGroup.Description = group.Description;
+
+            if (!string.IsNullOrEmpty(group.UsefulContent))
+                updateGroup.UsefulContent = group.UsefulContent;
+
+            if (!string.IsNullOrEmpty(group.Name))
+                updateGroup.Name = group.Name;
+
+            if (!string.IsNullOrEmpty(group.Name))
+                updateGroup.Name = group.Name;
+
+            if (group.ParentGroupId.HasValue)
+                updateGroup.ParentGroupId = group.ParentGroupId;
+
+            _context.Groups.Update(updateGroup);
         }
     }
 }

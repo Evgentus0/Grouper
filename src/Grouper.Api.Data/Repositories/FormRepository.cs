@@ -56,11 +56,17 @@ namespace Grouper.Api.Data.Repositories
             }
         }
 
-        public Task Update(Form form)
+        public async Task Update(Form form)
         {
-            _context.Forms.Update(form);
+            var updateForm = await _context.Forms.FirstOrDefaultAsync(x => x.Id == form.Id);
 
-            return Task.CompletedTask;
+            if (updateForm is null)
+                throw new DataApiException(nameof(_context.Forms));
+
+            if (!string.IsNullOrEmpty(form.Content))
+                updateForm.Content = form.Content;
+
+            _context.Forms.Update(updateForm);
         }
     }
 }

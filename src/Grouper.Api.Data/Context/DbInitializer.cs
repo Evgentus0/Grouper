@@ -96,7 +96,8 @@ namespace Grouper.Api.Data.Context
             #region Groups
             var group = new Group
             {
-                Name = "TestParentGroup"
+                Name = "TestParentGroup",
+                Identificator = Guid.NewGuid().ToString()
             };
             context.Groups.Add(group);
             context.SaveChanges();
@@ -104,7 +105,8 @@ namespace Grouper.Api.Data.Context
             var childGroup = new Group
             {
                 Name = "TestChildGroup",
-                ParentGroupId = context.Groups.First(x => x.Name == "TestParentGroup").Id
+                ParentGroupId = context.Groups.First(x => x.Name == "TestParentGroup").Id,
+                Identificator = Guid.NewGuid().ToString()
             };
             context.Groups.Add(childGroup);
             context.SaveChanges();
@@ -120,7 +122,13 @@ namespace Grouper.Api.Data.Context
                 GroupId = context.Groups.First(x => x.Name == "TestChildGroup").Id,
                 UserId = unitOfWork.UserManager.FindByEmailAsync("testTeacher@test.com").Result.Id
             };
-            context.AddRange(userGroup1, userGroup2);
+
+            var userGroup3 = new UserGroup
+            {
+                GroupId = context.Groups.First(x => x.Name == "TestParentGroup").Id,
+                UserId = unitOfWork.UserManager.FindByEmailAsync("testTeacher@test.com").Result.Id
+            };
+            context.AddRange(userGroup1, userGroup2, userGroup3);
             context.SaveChanges();
             #endregion
 
