@@ -18,7 +18,6 @@ namespace Grouper.Api.Web.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [AllowAnonymous]
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
@@ -31,6 +30,7 @@ namespace Grouper.Api.Web.Controllers
         }
 
         [HttpPost]
+        [AllowAnonymous]
         [Route("sign-in")]
         public async Task<ActionResult<string>> SignIn([FromBody] UserModel user)
         {
@@ -41,6 +41,7 @@ namespace Grouper.Api.Web.Controllers
         }
 
         [HttpPost]
+        [AllowAnonymous]
         [Route("sign-up")]
         public async Task<ActionResult<ResponseModel>> SignUp([FromBody] UserModel user)
         {

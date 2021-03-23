@@ -16,5 +16,6 @@ namespace Grouper.Api.Data.Interfaces
         Task Delete(int id);
         Task<List<Group>> GetByUserId(string userId);
         Task<(Group group, List<ApplicationUser> participants)> GetByIdentificator(string identificator);
+        Task DeleteUser(int groupId, string userId);
     }
 }

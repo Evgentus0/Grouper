@@ -52,6 +52,18 @@ namespace Grouper.Api.Data.Repositories
             }
         }
 
+        public async Task DeleteUser(int groupId, string userId)
+        {
+            var userGroup = await _context.UsersGroups
+                .FirstOrDefaultAsync(x => x.UserId == userId && x.GroupId == groupId);
+
+            if(userGroup is not null)
+            {
+                _context.UsersGroups.Remove(userGroup);
+            }
+
+        }
+
         public async Task<(Group group, List<ApplicationUser> participants)> GetById(int groupId)
         {
             var group =  await _context.Groups

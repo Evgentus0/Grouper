@@ -79,6 +79,25 @@ namespace Grouper.Api.Infrastructure.Services
             await _strategy.ExecuteAsync(async () =>
             {
                 await _dataBase.GroupRepository.Delete(id);
+
+                await _dataBase.SaveAsync();
+            });
+        }
+
+        public async Task DeleteUsers(int groupId, List<string> userEmails)
+        {
+            await _strategy.ExecuteAsync(async () =>
+            {
+                foreach (var emails in userEmails)
+                {
+                    var user = await _dataBase.UserManager.FindByEmailAsync(emails);
+                    if (user is null)
+                        continue;
+
+                    await _dataBase.GroupRepository.DeleteUser(groupId, user.Id);
+                }
+
+                await _dataBase.SaveAsync();
             });
         }
 

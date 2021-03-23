@@ -53,7 +53,7 @@ namespace Grouper.Api.Web.Controllers
         [HttpPost]
         [Route("add-with-identificator")]
         [Authorize(Roles = "student,teacher", AuthenticationSchemes = "Bearer")]
-        public async Task<ActionResult<GroupModel>> AddUserWithIdentificator([FromBody] string identificator)
+        public async Task<ActionResult<ResponseModel>> AddUserWithIdentificator([FromBody] string identificator)
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
                 ?? throw new ApiException(System.Net.HttpStatusCode.InternalServerError, "Can not find name indentifier in claims");
@@ -88,6 +88,17 @@ namespace Grouper.Api.Web.Controllers
             await _groupService.AddUser(groupId, userEmail);
 
             var response = new ResponseModel { Message = "User was added" };
+            return Ok(response);
+        }
+
+        [HttpPost]
+        [Route("{groupId}/delete-user")]
+        [Authorize(Roles = "teacher", AuthenticationSchemes = "Bearer")]
+        public async Task<ActionResult<ResponseModel>> DeleteUser(int groupId, [FromBody] List<string> userEmails)
+        {
+            await _groupService.DeleteUsers(groupId, userEmails);
+
+            var response = new ResponseModel { Message = "User was deleted" };
             return Ok(response);
         }
 
