@@ -15,9 +15,9 @@ COPY . /DockerSource
 RUN dotnet restore
 RUN dotnet publish -c release -o /DockerOutput/Website --no-restore
 
-FROM mcr.microsoft.com/dotnet/aspnet:5.0
-RUN mkdir /DockerOutput/Website
-WORKDIR /DockerOutput/Website
-COPY --from=build /DockerOutput/Website ./
+# FROM mcr.microsoft.com/dotnet/aspnet:5.0
+# RUN mkdir /DockerOutput/Website
+# WORKDIR /DockerOutput/Website
+# COPY --from=build /DockerOutput/Website ./
 
-ENTRYPOINT ["dotnet", "Grouper.Api.Web.dll"]
+# ENTRYPOINT ["dotnet", "Grouper.Api.Web.dll"]
