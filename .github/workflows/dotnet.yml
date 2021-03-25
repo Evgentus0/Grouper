@@ -37,6 +37,7 @@ jobs:
         uses: gonuit/heroku-docker-deploy@v1.3.2
         env:
           API_KEY: ${{secrets.HEROKU_API_KEY}}
+        env:
           APP_NAME: ${{secrets.HEROKU_APP_NAME}}
         with:
           email: zerom2016romanenko@gmail.com
