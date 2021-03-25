@@ -36,13 +36,11 @@ jobs:
       - name: Build, Push and Release a Docker container to Heroku.
         uses: gonuit/heroku-docker-deploy@v1.3.2
         env:
-          APP_NAME: ${{secrets.HEROKU_APP_NAME}}
           API_KEY: ${{secrets.HEROKU_API_KEY}}
-          
         with:
           email: zerom2016romanenko@gmail.com
           heroku_api_key: $API_KEY
-          heroku_app_name: $APP_NAME
+          heroku_app_name: grouper-8team-api
           dockerfile_directory: ./
           dockerfile_name: Dockerfile
           docker_options: "--no-cache"
