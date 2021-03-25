@@ -4,3 +4,4 @@ services:
 
 srcipts:
  - docker build -t 8team/grouper-api .
+ - docker images 8team/grouper-api
