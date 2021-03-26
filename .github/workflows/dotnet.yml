@@ -29,10 +29,6 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
 
-    variables: 
-      API_KEY: ${{secrets.HEROKU_API_KEY}}
-      APP_NAME: ${{secrets.HEROKU_APP_NAME}}
-
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -41,8 +37,8 @@ jobs:
         uses: gonuit/heroku-docker-deploy@v1.3.2
         with:
           email: zerom2016romanenko@gmail.com
-          heroku_api_key: $API_KEY
-          heroku_app_name: $APP_NAME
+          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+          heroku_app_name: ${{secrets.HEROKU_APP_NAME}}
           dockerfile_directory: ./
           dockerfile_name: Dockerfile
           docker_options: "--no-cache"
