@@ -68,7 +68,11 @@ namespace Grouper.Api.Web.Controllers
         public async Task<ActionResult<ResponseModel>> AddComment([FromBody] CommentModel comment)
         {
             var commentDto = _mapper.Map<CommentDto>(comment);
-            await _postService.AddComment(commentDto);
+
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
+                ?? throw new ApiException(System.Net.HttpStatusCode.InternalServerError, "Can not find name indentifier in claims");
+
+            await _postService.AddComment(commentDto, userId);
 
             var response = new ResponseModel { Message = "Comment was added" };
             return Ok(response);
