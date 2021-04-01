@@ -38,11 +38,12 @@ namespace Grouper.Api.Infrastructure.Services
             }
         }
 
-        public async Task AddComment(CommentDto commentDto)
+        public async Task AddComment(CommentDto commentDto, string senderId)
         {
             await _strategy.ExecuteAsync(async () =>
             {
                 var comment = _mapper.Map<Comment>(commentDto);
+                comment.UserId = senderId;
 
                 await _dataBase.PostRepository.AddComment(comment);
 

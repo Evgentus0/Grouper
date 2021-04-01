@@ -12,7 +12,7 @@ namespace Grouper.Api.Infrastructure.Interfaces
         Task Create(PostDto postDto);
         Task<List<PostDto>> GetByGroupId(int groupId);
         Task<PostDto> GetById(int id);
-        Task AddComment(CommentDto commentDto);
+        Task AddComment(CommentDto commentDto, string senderId);
         Task Delete(int id);
         Task Update(PostDto postDto);
         Task AcknowledgeUser(int postId, string userId);
