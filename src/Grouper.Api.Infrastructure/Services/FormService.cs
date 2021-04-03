@@ -23,11 +23,12 @@ namespace Grouper.Api.Infrastructure.Services
             _mapper = mapper;
             _strategy = strategy;
         }
-        public async Task Create(FormDto formDto)
+        public async Task Create(FormDto formDto, string userId)
         {
             await _strategy.ExecuteAsync(async () =>
             {
                 var form = _mapper.Map<Form>(formDto);
+                form.UserId = userId;
 
                 await _dataBase.FormRepository.Create(form);
                 await _dataBase.SaveAsync();

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Grouper.Api.Infrastructure.DTOs;
+using Grouper.Api.Infrastructure.Exceptions;
 using Grouper.Api.Infrastructure.Interfaces;
 using Grouper.Api.Web.Models;
 using Grouper.Api.Web.Models.Outbound;
@@ -9,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Grouper.Api.Web.Controllers
@@ -50,7 +52,11 @@ namespace Grouper.Api.Web.Controllers
         public async Task<ActionResult<ResponseModel>> Create([FromBody] FormModel formModel)
         {
             var formDto = _mapper.Map<FormDto>(formModel);
-            await _formService.Create(formDto);
+
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
+                ?? throw new ApiException(System.Net.HttpStatusCode.InternalServerError, "Can not find name indentifier in claims");
+
+            await _formService.Create(formDto, userId);
 
             var response = new ResponseModel { Message = "Form was created" };
             return Ok(response);

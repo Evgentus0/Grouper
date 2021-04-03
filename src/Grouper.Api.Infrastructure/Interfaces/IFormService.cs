@@ -11,7 +11,7 @@ namespace Grouper.Api.Infrastructure.Interfaces
     {
         Task<FormDto> GetById(int id);
         Task<List<FormDto>> GetByUserId(string userId);
-        Task Create(FormDto formDto);
+        Task Create(FormDto formDto, string userId);
         Task Delete(int id);
         Task Update(FormDto formDto);
     }
