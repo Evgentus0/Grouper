@@ -15,5 +15,16 @@ namespace Grouper.Api.Data.Entities
         public ApplicationUser User { get; set; }
         [ForeignKey("GroupId")]
         public Group Group { get; set; }
+
+        public override bool Equals(object obj)
+        {
+            if(obj is UserGroup userGroup)
+            {
+                return UserId == userGroup.UserId
+                    && GroupId == userGroup.GroupId;
+            }
+
+            return false;
+        }
     }
 }

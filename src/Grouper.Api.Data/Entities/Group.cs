@@ -25,5 +25,20 @@ namespace Grouper.Api.Data.Entities
             Tasks = new List<Post>();
             ChildGroups = new List<Group>();
         }
+
+        public override bool Equals(object obj)
+        {
+            if(obj is Group group)
+            {
+                return Id == group.Id
+                    && Identificator == group.Identificator
+                    && Name == group.Name
+                    && Description == group.Description
+                    && ParentGroupId == group.ParentGroupId
+                    && UsefulContent == group.UsefulContent;
+            }
+
+            return false;
+        }
     }
 }
