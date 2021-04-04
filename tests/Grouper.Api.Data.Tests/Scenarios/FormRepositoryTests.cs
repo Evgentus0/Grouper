@@ -94,7 +94,7 @@ namespace Grouper.Api.Data.Tests.Scenarios
 
             //Assert
             var actualForm = _context.Users.Include(x => x.Forms).First(x => x.Id == userId).Forms.First(x => x.Id == formId);
-            actualForm.Should().Be(excpectedForm);
+            actualForm.Id.Should().Be(excpectedForm.Id);
         }
 
         [Fact]
@@ -115,7 +115,7 @@ namespace Grouper.Api.Data.Tests.Scenarios
 
             //Assert
             var actualForm = _context.Forms.First(x => x.Id == formId);
-            actualForm.Should().Be(newForm);
+            actualForm.Content.Should().Be(newForm.Content);
         }
 
         public void Dispose()

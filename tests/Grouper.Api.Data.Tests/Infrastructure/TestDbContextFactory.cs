@@ -13,7 +13,7 @@ namespace Grouper.Api.Data.Tests.Infrastructure
         public static GrouperDbContext GetTestDbContext()
         {
             var options = new DbContextOptionsBuilder<GrouperDbContext>()
-                .UseInMemoryDatabase("InMemoryDb").Options;
+                .UseInMemoryDatabase(Guid.NewGuid().ToString()).Options;
 
             return new GrouperDbContext(options);
         }

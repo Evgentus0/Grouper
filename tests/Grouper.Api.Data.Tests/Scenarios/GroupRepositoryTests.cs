@@ -103,7 +103,7 @@ namespace Grouper.Api.Data.Tests.Scenarios
 
             var group = new Group { Id = groupId, Identificator = groupIdentificator, Name = groupName };
             _context.Groups.Add(group);
-            _context.SaveChanges();
+            var count = _context.SaveChanges();
 
             //Act
             var actualGroup = _repository.GetByIdentificator(groupIdentificator).Result.group;
@@ -138,7 +138,7 @@ namespace Grouper.Api.Data.Tests.Scenarios
             var actualGroups = _repository.GetByUserId(userId).Result;
 
             //Assert
-            actualGroups.Should().Equal(excpectedGroupList);
+            actualGroups.Select(x => x.Id).Should().Equal(excpectedGroupList.Select(x => x.Id));
         }
 
         [Fact]
