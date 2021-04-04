@@ -97,7 +97,8 @@ namespace Grouper.Api.Data.Context
             var group = new Group
             {
                 Name = "TestParentGroup",
-                Identificator = Guid.NewGuid().ToString()
+                Identificator = Guid.NewGuid().ToString(),
+                CreatorId = unitOfWork.UserManager.FindByEmailAsync("testTeacher@test.com").Result.Id
             };
             context.Groups.Add(group);
             context.SaveChanges();
@@ -106,7 +107,8 @@ namespace Grouper.Api.Data.Context
             {
                 Name = "TestChildGroup",
                 ParentGroupId = context.Groups.First(x => x.Name == "TestParentGroup").Id,
-                Identificator = Guid.NewGuid().ToString()
+                Identificator = Guid.NewGuid().ToString(),
+                CreatorId = unitOfWork.UserManager.FindByEmailAsync("testTeacher@test.com").Result.Id
             };
             context.Groups.Add(childGroup);
             context.SaveChanges();

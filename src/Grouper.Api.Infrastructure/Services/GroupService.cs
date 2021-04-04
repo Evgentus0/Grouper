@@ -54,14 +54,14 @@ namespace Grouper.Api.Infrastructure.Services
             });
         }
 
-        public async Task Create(GroupDto groupDto)
+        public async Task<int> Create(GroupDto groupDto)
         {
-            await _strategy.ExecuteAsync(async () =>
+            return await _strategy.ExecuteAsync(async () =>
             {
                 var group = _mapper.Map<Group>(groupDto);
                 group.Identificator = Guid.NewGuid().ToString();
 
-                await _dataBase.GroupRepository.Create(group);
+                var newGroupId = await _dataBase.GroupRepository.Create(group);
 
                 await _dataBase.SaveAsync();
 
@@ -71,6 +71,8 @@ namespace Grouper.Api.Infrastructure.Services
                 }
 
                 await _dataBase.SaveAsync();
+
+                return newGroupId;
             });
         }
 

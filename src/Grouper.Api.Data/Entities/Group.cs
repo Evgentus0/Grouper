@@ -19,6 +19,9 @@ namespace Grouper.Api.Data.Entities
         public List<Post> Tasks { get; set; }
         public string UsefulContent { get; set; }
         public List<Group> ChildGroups { get; set; }
+        public string CreatorId { get; set; }
+        [ForeignKey("CreatorId")]
+        public ApplicationUser Creator { get; set; }
 
         public Group()
         {

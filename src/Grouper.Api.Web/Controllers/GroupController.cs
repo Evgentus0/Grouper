@@ -71,12 +71,19 @@ namespace Grouper.Api.Web.Controllers
             var groupDto = _mapper.Map<GroupDto>(group);
 
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
-                ?? throw new ApiException(System.Net.HttpStatusCode.InternalServerError, "Can not find name indentifier in claims");
+                ?? throw new ApiException(System.Net.HttpStatusCode.InternalServerError, 
+                "Can not find name indentifier in claims");
+
             groupDto.Participants.Add(new UserDto { Id = userId });
+            groupDto.CreatorId = userId;
 
-            await _groupService.Create(groupDto);
+            var newId = await _groupService.Create(groupDto);
 
-            var response = new ResponseModel { Message = "Group was created" };
+            var response = new CreateResponseModel<int> 
+            { 
+                Message = "Group was created", 
+                NewlyCreatedId = newId 
+            };
             return Ok(response);
         }
         

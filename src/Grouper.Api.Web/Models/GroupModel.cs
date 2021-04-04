@@ -16,6 +16,8 @@ namespace Grouper.Api.Web.Models
         public string Description { get; set; }
         public string UsefulContent { get; set; }
         public int? ParentGroupId { get; set; }
+        public string CreatorId { get; set; }
+        public UserModel Creator { get; set; }
 
         public GroupModel()
         {

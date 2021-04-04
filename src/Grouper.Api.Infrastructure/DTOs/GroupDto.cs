@@ -17,6 +17,9 @@ namespace Grouper.Api.Infrastructure.DTOs
         public string Description { get; set; }
         public string UsefulContent { get; set; }
         public int? ParentGroupId { get; set; }
+        public string CreatorId { get; set; }
+        public UserDto Creator { get; set; }
+
 
         public GroupDto()
         {

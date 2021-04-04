@@ -11,7 +11,7 @@ namespace Grouper.Api.Infrastructure.Interfaces
     {
         Task<List<GroupDto>> GetByUserId(string userId);
         Task<GroupDto> GetById(int id);
-        Task Create(GroupDto groupDto);
+        Task<int> Create(GroupDto groupDto);
         Task AddUser(int groupId, string userEmail);
         Task Delete(int id);
         Task Update(GroupDto groupDto);
