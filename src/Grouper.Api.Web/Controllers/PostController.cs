@@ -30,13 +30,13 @@ namespace Grouper.Api.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<ResponseModel>> CreatePost([FromBody] PostModel post)
+        public async Task<ActionResult<PostModel>> CreatePost([FromBody] PostModel post)
         {
             var postDto = _mapper.Map<PostDto>(post);
-            await _postService.Create(postDto);
-
-            var response = new ResponseModel { Message = "Post was created" };
-            return Ok(response);
+            var newPost = await _postService.Create(postDto);
+            var postModel = _mapper.Map<PostModel>(newPost);
+            
+            return Ok(postModel);
         }
 
         [HttpGet]

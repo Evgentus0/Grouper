@@ -25,9 +25,10 @@ namespace Grouper.Api.Data.Repositories
             await _context.Comments.AddAsync(comment);
         }
 
-        public async Task Create(Post post)
+        public async Task<Post> Create(Post post)
         {
-            await _context.Posts.AddAsync(post);
+            var entity = await _context.Posts.AddAsync(post);
+            return entity.Entity;
         }
 
         public async Task Delete(int id)

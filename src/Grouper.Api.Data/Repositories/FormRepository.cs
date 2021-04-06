@@ -20,9 +20,10 @@ namespace Grouper.Api.Data.Repositories
             _context = context;
         }
 
-        public async Task Create(Form form)
+        public async Task<Form> Create(Form form)
         {
-            await _context.Forms.AddAsync(form);
+            var entity = await _context.Forms.AddAsync(form);
+            return entity.Entity;
         }
 
         public async Task Delete(int id)

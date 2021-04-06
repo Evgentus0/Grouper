@@ -66,7 +66,7 @@ namespace Grouper.Api.Web.Controllers
 
         [HttpPost]
         [Authorize(Roles = "teacher", AuthenticationSchemes = "Bearer")]
-        public async Task<ActionResult<ResponseModel>> Create([FromBody] GroupModel group)
+        public async Task<ActionResult<GroupModel>> Create([FromBody] GroupModel group)
         {
             var groupDto = _mapper.Map<GroupDto>(group);
 
@@ -77,14 +77,11 @@ namespace Grouper.Api.Web.Controllers
             groupDto.Participants.Add(new UserDto { Id = userId });
             groupDto.CreatorId = userId;
 
-            var newId = await _groupService.Create(groupDto);
+            var newGroup = await _groupService.Create(groupDto);
 
-            var response = new CreateResponseModel<int> 
-            { 
-                Message = "Group was created", 
-                NewlyCreatedId = newId 
-            };
-            return Ok(response);
+            var groupModel = _mapper.Map<GroupModel>(newGroup);
+
+            return Ok(groupModel);
         }
         
         [HttpPost]

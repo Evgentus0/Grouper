@@ -11,7 +11,7 @@ namespace Grouper.Api.Data.Interfaces
     {
         Task<Post> GetById(int id);
         Task AddComment(Comment comment);
-        Task Create(Post post);
+        Task<Post> Create(Post post);
         Task Delete(int id);
         Task<List<Post>> GetByGroupId(int groupId);
         Task Update(Post post);

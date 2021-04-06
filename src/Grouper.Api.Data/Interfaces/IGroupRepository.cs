@@ -12,7 +12,7 @@ namespace Grouper.Api.Data.Interfaces
         Task<(Group group, List<ApplicationUser> participants)> GetById(int groupId);
         Task Update(Group group);
         Task AddUserToGroup(int groupId, string userId);
-        Task<int> Create(Group group);
+        Task<Group> Create(Group group);
         Task Delete(int id);
         Task<List<Group>> GetByUserId(string userId);
         Task<(Group group, List<ApplicationUser> participants)> GetByIdentificator(string identificator);

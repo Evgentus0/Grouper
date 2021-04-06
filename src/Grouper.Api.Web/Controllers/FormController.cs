@@ -49,17 +49,18 @@ namespace Grouper.Api.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<ResponseModel>> Create([FromBody] FormModel formModel)
+        public async Task<ActionResult<FormModel>> Create([FromBody] FormModel formModel)
         {
             var formDto = _mapper.Map<FormDto>(formModel);
 
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
                 ?? throw new ApiException(System.Net.HttpStatusCode.InternalServerError, "Can not find name indentifier in claims");
 
-            await _formService.Create(formDto, userId);
+            var newForm = await _formService.Create(formDto, userId);
 
-            var response = new ResponseModel { Message = "Form was created" };
-            return Ok(response);
+            var newFormModel = _mapper.Map<FormModel>(newForm);
+
+            return Ok(newFormModel);
         }
 
         [HttpDelete]

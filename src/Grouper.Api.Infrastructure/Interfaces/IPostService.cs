@@ -9,7 +9,7 @@ namespace Grouper.Api.Infrastructure.Interfaces
 {
     public interface IPostService
     {
-        Task Create(PostDto postDto);
+        Task<PostDto> Create(PostDto postDto);
         Task<List<PostDto>> GetByGroupId(int groupId);
         Task<PostDto> GetById(int id);
         Task AddComment(CommentDto commentDto, string senderId);

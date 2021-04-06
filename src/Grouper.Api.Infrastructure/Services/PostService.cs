@@ -51,15 +51,19 @@ namespace Grouper.Api.Infrastructure.Services
             });
         }
 
-        public async Task Create(PostDto postDto)
+        public async Task<PostDto> Create(PostDto postDto)
         {
-            await _strategy.ExecuteAsync(async () =>
+            return await _strategy.ExecuteAsync(async () =>
             {
                 var post = _mapper.Map<Post>(postDto);
 
-                await _dataBase.PostRepository.Create(post);
+                var newPost = await _dataBase.PostRepository.Create(post);
 
                 await _dataBase.SaveAsync();
+
+                var newPostDto = _mapper.Map<PostDto>(newPost);
+
+                return newPostDto;
             });
         }
         

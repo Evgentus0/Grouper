@@ -9,7 +9,7 @@ namespace Grouper.Api.Data.Interfaces
 {
     public interface IFormRepository
     {
-        Task Create(Form form);
+        Task<Form> Create(Form form);
         Task Delete(int id);
         Task<Form> GetById(int id);
         Task<List<Form>> GetByUserId(string userId);

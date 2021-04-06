@@ -26,7 +26,7 @@ namespace Grouper.Api.Data.Repositories
             await _context.UsersGroups.AddAsync(userGroup);
         }
 
-        public async Task<int> Create(Group group)
+        public async Task<Group> Create(Group group)
         {
             var childGroups = group.ChildGroups;
             group.ChildGroups = null;
@@ -41,7 +41,7 @@ namespace Grouper.Api.Data.Repositories
                 await Update(child);
             }
 
-            return result.Entity.Id;
+            return result.Entity;
         }
 
         public async Task Delete(int id)
@@ -108,6 +108,7 @@ namespace Grouper.Api.Data.Repositories
         {
             return await _context.UsersGroups
                 .Include(x => x.Group)
+                .ThenInclude(x => x.Creator)
                 .Where(x => x.UserId == userId)
                 .Select(x => x.Group)
                 .ToListAsync();
