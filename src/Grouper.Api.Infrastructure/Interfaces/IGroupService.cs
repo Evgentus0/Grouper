@@ -15,7 +15,7 @@ namespace Grouper.Api.Infrastructure.Interfaces
         Task AddUser(int groupId, string userEmail);
         Task Delete(int id);
         Task Update(GroupDto groupDto);
-        Task AddUserWithIdentificator(string identificator, string userId);
+        Task<GroupDto> AddUserWithIdentificator(string identificator, string userId);
         Task DeleteUsers(int groupId, List<string> userEmails);
     }
 }

@@ -33,6 +33,16 @@ namespace Grouper.Api.Infrastructure.Services
             _strategy = strategy;
         }
 
+        public async Task DeleteUserFromGroup(string userId, int groupId)
+        {
+            await _strategy.ExecuteAsync(async () =>
+            {
+                await _dataBase.GroupRepository.DeleteUser(groupId, userId);
+
+                await _dataBase.SaveAsync();
+            });
+        }
+
         public async Task<UserDto> GetInfo(string id)
         {
             return await _strategy.ExecuteAsync(async () =>

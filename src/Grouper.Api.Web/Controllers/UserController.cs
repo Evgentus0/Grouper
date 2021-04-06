@@ -67,5 +67,18 @@ namespace Grouper.Api.Web.Controllers
 
             return Ok(result);
         }
+
+        [HttpPost]
+        [Route("leave-group")]
+        [Authorize(AuthenticationSchemes = "Bearer")]
+        public async Task<IActionResult> LeaveGroup([FromQuery]int groupId)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
+                ?? throw new ApiException(System.Net.HttpStatusCode.InternalServerError, "Can not find name indentifier in claims");
+
+            await _userService.DeleteUserFromGroup(userId, groupId);
+
+            return Ok(new { message = "Ok" });
+        }
     }
 }

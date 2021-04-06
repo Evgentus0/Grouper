@@ -53,15 +53,15 @@ namespace Grouper.Api.Web.Controllers
         [HttpPost]
         [Route("add-with-identificator")]
         [Authorize(Roles = "student,teacher", AuthenticationSchemes = "Bearer")]
-        public async Task<ActionResult<ResponseModel>> AddUserWithIdentificator([FromBody] string identificator)
+        public async Task<ActionResult<GroupModel>> AddUserWithIdentificator([FromBody] string identificator)
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
                 ?? throw new ApiException(System.Net.HttpStatusCode.InternalServerError, "Can not find name indentifier in claims");
 
-            await _groupService.AddUserWithIdentificator(identificator, userId);
+            var groupDto = await _groupService.AddUserWithIdentificator(identificator, userId);
+            var groupModel = _mapper.Map<GroupModel>(groupDto);
 
-            var response = new ResponseModel { Message = "User was added" };
-            return Ok(response);
+            return Ok(groupModel);
         }
 
         [HttpPost]

@@ -42,15 +42,19 @@ namespace Grouper.Api.Infrastructure.Services
             });
         }
 
-        public async Task AddUserWithIdentificator(string identificator, string userId)
+        public async Task<GroupDto> AddUserWithIdentificator(string identificator, string userId)
         {
-            await _strategy.ExecuteAsync(async () =>
+            return await _strategy.ExecuteAsync(async () =>
             {
                 Group group = (await _dataBase.GroupRepository.GetByIdentificator(identificator)).group;
 
                 await _dataBase.GroupRepository.AddUserToGroup(group.Id, userId);
 
                 await _dataBase.SaveAsync();
+
+                var groupDto = _mapper.Map<GroupDto>(group);
+
+                return groupDto;
             });
         }
 
